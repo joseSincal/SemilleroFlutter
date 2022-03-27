@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "918266004278",
+    "project_id": "fluttertripsjose",
+    "storage_bucket": "fluttertripsjose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918266004278:android:d4a34334487762d233a997",
+        "android_client_info": {
+          "package_name": "com.example.semiuni_course_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "918266004278-4sbem9ipled1ci9pkfd17fdduvrpj7p5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.semiuni_course_app",
+            "certificate_hash": "fd8eda3a78494f58ce073c6f22fdc7924cd7121b"
+          }
+        },
+        {
+          "client_id": "918266004278-kgrirh4sn4hca9jieb58pd22fsner1vl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZXRwuOyrUhrtAIUsX_mCkkSmP2XxP2s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "918266004278-kgrirh4sn4hca9jieb58pd22fsner1vl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
