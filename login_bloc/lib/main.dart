@@ -24,7 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeProvider themeChangeProvider = new ThemeProvider();
+  ThemeProvider themeChangeProvider = ThemeProvider();
   late Future<void> _firebase;
 
   Future<void> _initializeFB() async {
