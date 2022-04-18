@@ -3,9 +3,10 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Pages/Page_init/page_init.dart';
 import 'package:login_bloc/Providers/theme.dart';
@@ -32,11 +33,12 @@ class _MyAppState extends State<MyApp> {
     await _initializeC();
     await _initializeRC();
     await _initializeCM();
+    getCurrentAppTheme();
   }
 
   Future<void> _initializeC() async {
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    //await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
     Function onOriginalError = FlutterError.onError as Function;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
@@ -70,14 +72,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void getCurrentAppTheme() async {
-    themeChangeProvider.setTheme =
-        await themeChangeProvider.themePreference.getTheme();
+    DatabaseReference starCountRef =
+        FirebaseDatabase.instance.ref('preferencias/tema');
+    starCountRef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      themeChangeProvider.setTheme = data as String;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentAppTheme();
     _firebase = _initializeFB();
   }
 

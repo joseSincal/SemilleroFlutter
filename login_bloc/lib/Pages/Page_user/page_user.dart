@@ -44,7 +44,7 @@ class PageUser extends StatelessWidget {
                   onChanged: (value) {
                     String newTheme =
                         value ? ThemePreference.DARK : ThemePreference.LIGHT;
-                    currentTheme.setTheme = newTheme;
+                    currentTheme.updateTheme = newTheme;
                   }),
               Icon(Icons.brightness_2,
                   color:

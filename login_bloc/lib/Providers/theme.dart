@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:login_bloc/Models/theme_preferences.dart';
 
@@ -9,8 +10,11 @@ class ThemeProvider with ChangeNotifier {
 
   set setTheme(String theme) {
     _theme = theme;
-    themePreference.setModeTheme(theme);
     notifyListeners();
+  }
+
+  set updateTheme(String theme) {
+    themePreference.setModeTheme(theme);
   }
 
   bool isDarkTheme() => _theme == ThemePreference.DARK;
