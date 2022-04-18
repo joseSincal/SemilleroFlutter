@@ -27,13 +27,18 @@ class PageLogin extends StatelessWidget {
         switch (state.runtimeType) {
           case AppStarted:
             break;
-          case LoginFailure:
+          case UserNotFound:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Datos incorrectos')),
+              const SnackBar(content: Text('Este usuario no existe')),
             );
             break;
-          case LoginLoading:
-            final estado = state as LoginLoading;
+          case PasswordFailure:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Contraseña incorrecta')),
+            );
+            break;
+          case LoginSuccess:
+            final estado = state as LoginSuccess;
             Navigator.push(
                 context,
                 MaterialPageRoute(

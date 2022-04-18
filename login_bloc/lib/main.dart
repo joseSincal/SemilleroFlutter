@@ -7,7 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:login_bloc/Pages/Page_login/page_login.dart';
+import 'package:login_bloc/Pages/Page_init/page_init.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +47,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initializeRC() async {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+    remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: Duration.zero,
+    ));
     remoteConfig.setDefaults({
       'parametro': 1,
       'userEmail': 'ottozincal@gmail.com',
@@ -82,15 +86,22 @@ class _MyAppState extends State<MyApp> {
     return FutureBuilder(
         future: _firebase,
         builder: (context, snapshot) {
-          return ChangeNotifierProvider.value(
-              value: themeChangeProvider,
-              child: MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                home: const PageLogin(),
-              ));
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ChangeNotifierProvider.value(
+                value: themeChangeProvider,
+                child: MaterialApp(
+                  title: 'Flutter Demo',
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                    visualDensity: VisualDensity.adaptivePlatformDensity,
+                  ),
+                  home: const PageInit(),
+                ));
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         });
   }
 }

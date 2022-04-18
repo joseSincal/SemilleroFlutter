@@ -44,6 +44,7 @@ dependencies:
   firebase_messaging: ^11.2.12
   provider: ^6.0.2
   shared_preferences: ^2.0.13
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:
@@ -97,3 +98,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  assets:
+    - assets/img/
