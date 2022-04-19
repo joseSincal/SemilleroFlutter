@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/comic_model.dart';
-import 'package:login_bloc/Providers/api_usuario.dart';
+import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/utils/app_type.dart';
 
 class PageData extends StatelessWidget {
@@ -12,7 +12,7 @@ class PageData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: ApiUsuario.shared.request(
+        future: ApiManager.shared.request(
             baseUrl: "gateway.marvel.com",
             pathUrl: "/v1/public/characters/1010911",
             type: HttpType.GET),

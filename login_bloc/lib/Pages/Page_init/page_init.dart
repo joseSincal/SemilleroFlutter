@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Pages/Page_login/page_login.dart';
+import 'package:login_bloc/Pages/Page_seguros/seguros_list.dart';
 import 'package:login_bloc/Widgets/background.dart';
 
 class PageInit extends StatefulWidget {
@@ -16,10 +17,9 @@ class _PageInitState extends State<PageInit> {
   void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 3000), () {
-      Navigator.push(
-          //context, MaterialPageRoute(builder: (context) => const PageSettings()));
-          context,
-          MaterialPageRoute(builder: (context) => PageLogin()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SegurosList()));
+      //context, MaterialPageRoute(builder: (context) => PageLogin()));
     });
   }
 

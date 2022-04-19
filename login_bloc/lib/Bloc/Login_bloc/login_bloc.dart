@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
-import 'package:login_bloc/Providers/api_usuario.dart';
+import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/utils/app_type.dart';
 
 part 'login_state.dart';
@@ -17,13 +17,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       */
       var body = {"email": event.email, "password": event.password};
 
-      Usuario? user = await ApiUsuario.shared.request(
+      dynamic bodyRequest = await ApiManager.shared.request(
           baseUrl: "192.168.1.4:9595",
           pathUrl: "/usuario/buscar/email",
           type: HttpType.POST,
           bodyParams: body);
 
-      if (user != null) {
+      if (bodyRequest != null) {
+        Usuario user = Usuario.fromService(bodyRequest);
         if (event.password == user.password) {
           emit(LoginSuccess(username: user.username));
         } else {

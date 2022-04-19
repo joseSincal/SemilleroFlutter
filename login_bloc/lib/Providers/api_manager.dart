@@ -3,18 +3,17 @@ import 'dart:developer';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Providers/agregar_peticion.dart';
 import 'package:login_bloc/Providers/location.dart';
 import 'package:login_bloc/utils/app_type.dart';
 import 'package:http/http.dart' as http;
 
-class ApiUsuario {
-  ApiUsuario._privateConstructor();
+class ApiManager {
+  ApiManager._privateConstructor();
 
-  static final ApiUsuario shared = ApiUsuario._privateConstructor();
+  static final ApiManager shared = ApiManager._privateConstructor();
 
-  Future<Usuario?> request({
+  Future<dynamic> request({
     required String baseUrl,
     required String pathUrl,
     required HttpType type,
@@ -43,12 +42,11 @@ class ApiUsuario {
     }
 
     Position pos = await LocationProvider().determinePosition();
-    await AgregarPeticion.shared.AddPeticion(pos, response.statusCode, uri.toString(), type);
+    //await AgregarPeticion.shared.AddPeticion(pos, response.statusCode, uri.toString(), type);
 
     if (response.statusCode == 200) {
       if (response.body != "") {
-        final body = jsonDecode(response.body);
-        return Usuario.fromService(body);
+        return response.body;
       }
     } else {
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
