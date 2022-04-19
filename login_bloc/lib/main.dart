@@ -8,11 +8,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:login_bloc/Pages/Page_init/page_init.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   runZonedGuarded(() => runApp(const MyApp()),
       (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }

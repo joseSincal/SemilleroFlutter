@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Providers/api_usuario.dart';
-import 'package:login_bloc/util/app_type.dart';
+import 'package:login_bloc/utils/app_type.dart';
 
 part 'login_state.dart';
 part 'login_event.dart';

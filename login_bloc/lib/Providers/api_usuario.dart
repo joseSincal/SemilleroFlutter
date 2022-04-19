@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Providers/agregar_peticion.dart';
 import 'package:login_bloc/Providers/location.dart';
-import 'package:login_bloc/util/app_type.dart';
+import 'package:login_bloc/utils/app_type.dart';
 import 'package:http/http.dart' as http;
 
 class ApiUsuario {

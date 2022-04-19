@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:login_bloc/util/app_type.dart';
+import 'package:login_bloc/utils/app_type.dart';
 
 class AgregarPeticion {
   AgregarPeticion._privateConstructor();

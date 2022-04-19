@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/comic_model.dart';
 import 'package:login_bloc/Providers/api_usuario.dart';
-import 'package:login_bloc/util/app_type.dart';
+import 'package:login_bloc/utils/app_type.dart';
 
 class PageData extends StatelessWidget {
   const PageData({Key? key}) : super(key: key);
