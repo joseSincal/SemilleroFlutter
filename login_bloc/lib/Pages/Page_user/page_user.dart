@@ -1,15 +1,25 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/theme_preferences.dart';
+import 'package:login_bloc/Models/usuario_model.dart';
+import 'package:login_bloc/Pages/Page_clientes/clientes_list.dart';
+import 'package:login_bloc/Pages/Page_seguros/seguros_list.dart';
+import 'package:login_bloc/Pages/Page_settings/page_settings.dart';
+import 'package:login_bloc/Pages/Page_siniestro/siniestros_list.dart';
+import 'package:login_bloc/Pages/Page_user/widgets/user_info.dart';
 import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Widgets/background.dart';
+import 'package:login_bloc/Widgets/button_large.dart';
+import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
 class PageUser extends StatelessWidget {
-  final String username;
-  const PageUser({required this.username, Key? key}) : super(key: key);
+  final Usuario usuario;
+  const PageUser({required this.usuario, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,56 +27,121 @@ class PageUser extends StatelessWidget {
     final currentTheme = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      backgroundColor:
-          currentTheme.isDarkTheme() ? const Color(0xff2a293d) : Colors.white,
-      appBar: AppBar(
-        backgroundColor:
-            currentTheme.isDarkTheme() ? Colors.black12 : Colors.blue,
-        title: Text(username),
-      ),
-      body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(
-            'Toca para cambiar de tema',
-            style: TextStyle(
-                color:
-                    currentTheme.isDarkTheme() ? Colors.white : Colors.black),
-          ),
-          const SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Stack(
+        children: [
+          Background(height: null),
+          ListView(
             children: [
-              Icon(Icons.wb_sunny,
-                  color:
-                      currentTheme.isDarkTheme() ? Colors.white : Colors.black),
-              Switch(
-                  value: currentTheme.isDarkTheme(),
-                  onChanged: (value) {
-                    String newTheme =
-                        value ? ThemePreference.DARK : ThemePreference.LIGHT;
-                    currentTheme.updateTheme = newTheme;
-                  }),
-              Icon(Icons.brightness_2,
-                  color:
-                      currentTheme.isDarkTheme() ? Colors.white : Colors.black)
+              Container(
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 20.0, top: 50.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          "Profile",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30.0),
+                        ),
+                        const Expanded(
+                          child: Text(""),
+                        ),
+                        Expanded(
+                            child: Row(
+                          children: [
+                            FloatingActionButton(
+                                backgroundColor: Colors.white54,
+                                mini: true,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.exit_to_app,
+                                  size: 20.0,
+                                  color: xiketic,
+                                ),
+                                heroTag: null),
+                            FloatingActionButton(
+                                backgroundColor: Colors.white54,
+                                mini: true,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (cxt) =>
+                                              const PageSettings()));
+                                },
+                                child: Icon(
+                                  Icons.settings,
+                                  size: 20.0,
+                                  color: xiketic,
+                                ),
+                                heroTag: null)
+                          ],
+                        ))
+                      ],
+                    ),
+                    UserInfo(usuario: usuario)
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20.0),
+                child: Column(
+                  children: [
+                    ButtonLarge(
+                      buttonText: "Ver clientes",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (cxt) => const ClientesList()));
+                      },
+                    ),
+                    ButtonLarge(
+                      buttonText: "Ver seguros",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (cxt) => const SegurosList()));
+                      },
+                    ),
+                    ButtonLarge(
+                      buttonText: "Ver siniestros",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (cxt) => const SiniestrosList()));
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-              onPressed: () {
-                if (FirebaseCrashlytics
-                    .instance.isCrashlyticsCollectionEnabled) {
-                  FirebaseCrashlytics.instance.recordError(
-                      "Cierre inesperado", StackTrace.current,
-                      reason: "La aplicación se cerró");
-                  FirebaseCrashlytics.instance.crash();
-                } else {
-                  log("No se pudo enviar el error");
-                }
-              },
-              child: const Text('Generar Error')),
-        ]),
+          )
+        ],
       ),
     );
   }
 }
+
+
+/*
+ElevatedButton(
+              onPressed: () {
+                if (crashlytics.isCrashlyticsCollectionEnabled) {
+                  crashlytics.recordError(
+                      "Cierre inesperado", StackTrace.current,
+                      reason: "La aplicación se cerró");
+                  crashlytics.crash();
+                } else {
+                  log("No se pudo enviar el error");
+                }
+              },
+              child: const Text('Generar Error'))
+*/

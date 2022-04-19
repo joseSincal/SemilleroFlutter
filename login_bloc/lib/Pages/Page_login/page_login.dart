@@ -45,7 +45,7 @@ class PageLogin extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (cxt) => PageUser(username: estado.username)));
+                    builder: (cxt) => PageUser(usuario: estado.usuario)));
             break;
         }
       }), child: BlocBuilder<LoginBloc, LoginState>(

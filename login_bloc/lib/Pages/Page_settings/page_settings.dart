@@ -17,30 +17,35 @@ class PageSettings extends StatelessWidget {
         body: Stack(children: [
       Background(height: 300),
       const AppBarTitle(title: 'Settings'),
-      ListView(
-        padding: const EdgeInsets.only(top: 120.0),
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(Icons.wb_sunny,
-                    color: currentTheme.isDarkTheme() ? Colors.white : xiketic),
-                Switch(
-                    value: currentTheme.isDarkTheme(),
-                    onChanged: (value) {
-                      String newTheme =
-                          value ? ThemePreference.DARK : ThemePreference.LIGHT;
-                      currentTheme.updateTheme = newTheme;
-                    }),
-                Icon(Icons.brightness_2,
-                    color: currentTheme.isDarkTheme() ? Colors.white : xiketic)
-              ],
-            ),
-          )
-        ],
+      Container(
+        margin: const EdgeInsets.only(top: 120.0),
+        child: ListView(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(Icons.wb_sunny,
+                      color:
+                          currentTheme.isDarkTheme() ? Colors.white : xiketic),
+                  Switch(
+                      value: currentTheme.isDarkTheme(),
+                      onChanged: (value) {
+                        String newTheme = value
+                            ? ThemePreference.DARK
+                            : ThemePreference.LIGHT;
+                        currentTheme.updateTheme = newTheme;
+                      }),
+                  Icon(Icons.brightness_2,
+                      color:
+                          currentTheme.isDarkTheme() ? Colors.white : xiketic)
+                ],
+              ),
+            )
+          ],
+        ),
       )
     ]));
   }

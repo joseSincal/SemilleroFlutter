@@ -19,9 +19,10 @@ class _PageInitState extends State<PageInit> {
   void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 3000), () {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SiniestrosList()));
-      //context, MaterialPageRoute(builder: (context) => PageLogin()));
+      Navigator.push(
+          //context, MaterialPageRoute(builder: (context) => const SiniestrosList()));
+          context,
+          MaterialPageRoute(builder: (context) => PageLogin()));
     });
   }
 

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -24,9 +27,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           bodyParams: body);
 
       if (bodyRequest != null) {
-        Usuario user = Usuario.fromService(bodyRequest);
+        var usuarioJson = json.decode(bodyRequest.toString());
+        Usuario user = Usuario.fromService(usuarioJson);
         if (event.password == user.password) {
-          emit(LoginSuccess(username: user.username));
+          emit(LoginSuccess(usuario: user));
         } else {
           emit(PasswordFailure());
         }

@@ -5,9 +5,9 @@ abstract class LoginState {}
 class AppStarted extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final String username;
+  final Usuario usuario;
 
-  LoginSuccess({required this.username});
+  LoginSuccess({required this.usuario});
 }
 
 class UserNotFound extends LoginState {}
