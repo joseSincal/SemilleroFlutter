@@ -56,8 +56,9 @@ class PageUser extends StatelessWidget {
               onPressed: () {
                 if (FirebaseCrashlytics
                     .instance.isCrashlyticsCollectionEnabled) {
-                  FirebaseCrashlytics.instance.log("Email: " +
-                      FirebaseRemoteConfig.instance.getString('userEmail'));
+                  FirebaseCrashlytics.instance.recordError(
+                      "Cierre inesperado", StackTrace.current,
+                      reason: "La aplicación se cerró");
                   FirebaseCrashlytics.instance.crash();
                 } else {
                   log("No se pudo enviar el error");

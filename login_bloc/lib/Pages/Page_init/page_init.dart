@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:login_bloc/Pages/Page_data/page_data.dart';
 import 'package:login_bloc/Pages/Page_login/page_login.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:login_bloc/utils/color.dart';
@@ -18,7 +17,7 @@ class _PageInitState extends State<PageInit> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 4000), () {
+    Timer(const Duration(milliseconds: 3000), () {
       Navigator.push(
           //context, MaterialPageRoute(builder: (context) => const PageData()));
           context,
