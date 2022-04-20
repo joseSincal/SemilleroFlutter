@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/cliente.model.dart';
+import 'package:login_bloc/Pages/Page_clientes/widgets/detalle_cliente.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +16,7 @@ class ClienteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
 
-    return Container(
+    final infoCard = Container(
       height: 120.0,
       margin: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
       decoration: BoxDecoration(
@@ -73,7 +77,7 @@ class ClienteCard extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Container(width: 24.0),
-              Icon(Icons.location_searching_rounded,
+              Icon(Icons.location_pin,
                   size: 12.0,
                   color: currentTheme.isDarkTheme()
                       ? const Color(0xffb6b2df)
@@ -92,6 +96,15 @@ class ClienteCard extends StatelessWidget {
           ),
         ]),
       ),
+    );
+
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => DetalleCliente(cliente: cliente));
+      },
+      child: infoCard,
     );
   }
 }
