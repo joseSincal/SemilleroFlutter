@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
+import 'package:login_bloc/Pages/Page_siniestro/widgets/detalle_siniestro.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class SiniestroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
 
-    return Container(
+    final infoCard = Container(
       height: 120.0,
       margin: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
       decoration: BoxDecoration(
@@ -74,7 +75,7 @@ class SiniestroCard extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Container(width: 24.0),
-              Icon(Icons.monetization_on_outlined,
+              Icon(Icons.attach_money,
                   size: 12.0,
                   color: currentTheme.isDarkTheme()
                       ? const Color(0xffb6b2df)
@@ -93,6 +94,15 @@ class SiniestroCard extends StatelessWidget {
           ),
         ]),
       ),
+    );
+
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => DetalleSiniestro(siniestro: siniestro));
+      },
+      child: infoCard,
     );
   }
 }

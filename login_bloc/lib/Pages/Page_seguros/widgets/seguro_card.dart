@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Pages/Page_seguros/widgets/detalle_seguro.dart';
 import 'package:login_bloc/Providers/theme.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class SeguroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
 
-    return Container(
+    final infoCard = Container(
       height: 120.0,
       margin: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
       decoration: BoxDecoration(
@@ -93,6 +94,15 @@ class SeguroCard extends StatelessWidget {
           ),
         ]),
       ),
+    );
+
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => DetalleSeguro(seguro: seguro));
+      },
+      child: infoCard,
     );
   }
 }
