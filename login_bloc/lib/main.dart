@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -9,9 +10,19 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:login_bloc/Models/cliente_model.dart';
+import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_init/page_init.dart';
+import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Repository/cliente_repository.dart';
+import 'package:login_bloc/Repository/seguro_repository.dart';
+import 'package:login_bloc/Repository/siniestro_repository.dart';
+import 'package:login_bloc/utils/app_type.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -38,6 +49,17 @@ class _MyAppState extends State<MyApp> {
     await _initializeRC();
     await _initializeCM();
     getCurrentAppTheme();
+    await _deleteDb();
+
+    await _cargarSeguros();
+    await _cargarClientes();
+    await _cargarSiniestros();
+  }
+
+  Future<void> _deleteDb() async {
+    Directory directoryDb = await getApplicationDocumentsDirectory();
+    String path = "${directoryDb.path}test.db";
+    databaseFactory.deleteDatabase(path);
   }
 
   Future<void> _initializeC() async {
@@ -75,13 +97,58 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void getCurrentAppTheme() async {
+  void getCurrentAppTheme() {
     DatabaseReference starCountRef =
         FirebaseDatabase.instance.ref('preferencias/tema');
     starCountRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       themeChangeProvider.setTheme = data as String;
     });
+  }
+
+  Future<void> _cargarClientes() async {
+    dynamic bodyRequest = await ApiManager.shared.request(
+        baseUrl: "192.168.1.4:9595",
+        pathUrl: "/cliente/buscar",
+        type: HttpType.GET);
+    if (bodyRequest != null) {
+      List<Cliente> lista = List<Cliente>.empty(growable: true);
+      for (var item in bodyRequest as List<dynamic>) {
+        final Cliente cliente = Cliente.fromService(item);
+        lista.add(cliente);
+      }
+      ClienteRepository.shared.save(data: lista, tableName: 'cliente');
+    }
+  }
+
+  Future<void> _cargarSeguros() async {
+    dynamic bodyRequest = await ApiManager.shared.request(
+        baseUrl: "192.168.1.4:9595",
+        pathUrl: "/seguro/buscar",
+        type: HttpType.GET);
+    if (bodyRequest != null) {
+      List<Seguro> lista = List<Seguro>.empty(growable: true);
+      for (var item in bodyRequest as List<dynamic>) {
+        final Seguro seguro = Seguro.fromService(item);
+        lista.add(seguro);
+      }
+      SeguroRepository.shared.save(data: lista, tableName: 'seguro');
+    }
+  }
+
+  Future<void> _cargarSiniestros() async {
+    dynamic bodyRequest = await ApiManager.shared.request(
+        baseUrl: "192.168.1.4:9595",
+        pathUrl: "/siniestro/buscar",
+        type: HttpType.GET);
+    if (bodyRequest != null) {
+      List<Siniestro> lista = List<Siniestro>.empty(growable: true);
+      for (var item in bodyRequest as List<dynamic>) {
+        final Siniestro siniestro = Siniestro.fromService(item);
+        lista.add(siniestro);
+      }
+      SiniestroRepository.shared.save(data: lista, tableName: 'siniestro');
+    }
   }
 
   @override

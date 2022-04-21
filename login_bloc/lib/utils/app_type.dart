@@ -1,6 +1,1 @@
-enum HttpType{
-  GET,
-  POST,
-  DELETE,
-  PUT
-}
+enum HttpType { GET, POST, DELETE, PUT }

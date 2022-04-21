@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Widgets/dialog_delete.dart';
 import 'package:login_bloc/utils/color.dart';
 
 class DetalleSeguro extends StatelessWidget {
@@ -69,7 +70,9 @@ class DetalleSeguro extends StatelessWidget {
             ),
           ]),
       actions: [
-        IconAction(Icons.delete_forever_rounded, darkRed, () {}),
+        IconAction(Icons.delete_forever_rounded, darkRed, () {
+          return DialogDelete.shared.show(context, "seguro", "id = ?", [seguro.id.toString()]);
+        }),
         IconAction(Icons.edit, Colors.blue[600], () {}),
         IconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);

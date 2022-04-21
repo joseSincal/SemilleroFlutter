@@ -22,7 +22,10 @@ class ApiManager {
   }) async {
     final uri = Uri.http(baseUrl, pathUrl);
 
-    http.Response response;
+    dynamic response;
+    dynamic headers = {
+      'Content-Type': 'application/json',
+    };
 
     switch (type) {
       case HttpType.GET:
@@ -30,11 +33,11 @@ class ApiManager {
         break;
       case HttpType.POST:
         response = await http.post(uri,
-            headers: {'Content-Type': 'application/json'},
-            body: json.encode(bodyParams));
+            headers: headers, body: json.encode(bodyParams));
         break;
       case HttpType.PUT:
-        response = await http.put(uri);
+        response = await http.put(uri,
+            headers: headers, body: json.encode(bodyParams));
         break;
       case HttpType.DELETE:
         response = await http.delete(uri);
@@ -46,7 +49,7 @@ class ApiManager {
 
     if (response.statusCode == 200) {
       if (response.body != "") {
-        return response.body;
+        return jsonDecode(utf8.decode(response.bodyBytes));
       }
     } else {
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {

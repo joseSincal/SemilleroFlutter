@@ -26,9 +26,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           type: HttpType.POST,
           bodyParams: body);
 
+
       if (bodyRequest != null) {
-        var usuarioJson = json.decode(bodyRequest.toString());
-        Usuario user = Usuario.fromService(usuarioJson);
+        Usuario user = Usuario.fromService(bodyRequest);
         if (event.password == user.password) {
           emit(LoginSuccess(usuario: user));
         } else {
