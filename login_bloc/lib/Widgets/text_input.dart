@@ -7,60 +7,58 @@ class TextInput extends StatelessWidget {
   final String hintText;
   final TextInputType? inputType;
   final TextEditingController controller;
-  final IconData icon;
-  int maxLines;
+  IconData? icon;
+  int? maxLines;
+  bool readOnly;
 
   TextInput(
       {Key? key,
       required this.hintText,
       required this.inputType,
       required this.controller,
-      required this.icon,
-      this.maxLines = 1})
+      this.icon,
+      this.maxLines = 1,
+      this.readOnly = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
 
-    return Container(
-      padding: const EdgeInsets.only(right: 45.0, left: 45.0),
-      child: TextField(
-          autofocus: false,
-          controller: controller,
-          keyboardType: inputType,
-          maxLines: maxLines,
-          style: TextStyle(
-              fontSize: 15.0,
-              color:
-                  currentTheme.isDarkTheme() ? Colors.white70 : Colors.black87,
-              fontWeight: FontWeight.bold),
-          decoration: InputDecoration(
-              suffixIcon: Icon(
-                icon,
-                color: currentTheme.isDarkTheme() ? Colors.white : xiketic,
-              ),
-              filled: true,
-              fillColor:
-                  currentTheme.isDarkTheme() ? Colors.white12 : Colors.black12,
-              border: InputBorder.none,
-              hintText: hintText,
-              hintStyle: TextStyle(
-                  color: currentTheme.isDarkTheme()
-                      ? Colors.white38
-                      : Colors.black45),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: currentTheme.isDarkTheme()
-                          ? Colors.white12
-                          : Colors.black12),
-                  borderRadius: const BorderRadius.all(Radius.circular(30))),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color:
-                          currentTheme.isDarkTheme() ? Colors.white : xiketic),
-                  borderRadius: const BorderRadius.all(Radius.circular(30))))),
-    );
+    return TextField(
+        autofocus: false,
+        controller: controller,
+        keyboardType: inputType,
+        maxLines: maxLines,
+        readOnly: readOnly,
+        style: TextStyle(
+            fontSize: 15.0,
+            color: currentTheme.isDarkTheme() ? Colors.white70 : Colors.black87,
+            fontWeight: FontWeight.bold),
+        decoration: InputDecoration(
+            suffixIcon: Icon(
+              icon,
+              color: currentTheme.isDarkTheme() ? Colors.white : xiketic,
+            ),
+            filled: true,
+            fillColor:
+                currentTheme.isDarkTheme() ? Colors.white12 : Colors.black12,
+            border: InputBorder.none,
+            hintText: hintText,
+            hintStyle: TextStyle(
+                color: currentTheme.isDarkTheme()
+                    ? Colors.white38
+                    : Colors.black45),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white12
+                        : Colors.black12),
+                borderRadius: const BorderRadius.all(Radius.circular(30))),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: currentTheme.isDarkTheme() ? Colors.white : xiketic),
+                borderRadius: const BorderRadius.all(Radius.circular(30)))));
   }
 }
 

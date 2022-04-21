@@ -35,6 +35,15 @@ abstract class MasterRepository {
         where: whereClause, whereArgs: whereArgs);
   }
 
+  Future<void> update(
+      {required String tablaName,
+      required Map<String, dynamic> data,
+      required String whereClause,
+      required List<String> whereArgs}) async {
+    Database dbManager = await DbManager().db;
+    dbManager.update(tablaName, data, where: whereClause, whereArgs: whereArgs);
+  }
+
   Future<void> addColumn(
       {required String tablaName,
       required String columnName,

@@ -72,6 +72,7 @@ class PageLogin extends StatelessWidget {
                     Column(
                       children: [
                         Container(
+                          padding: const EdgeInsets.only(right: 45.0, left: 45.0),
                           margin:
                               const EdgeInsets.only(top: 35.0, bottom: 20.0),
                           child: TextInput(

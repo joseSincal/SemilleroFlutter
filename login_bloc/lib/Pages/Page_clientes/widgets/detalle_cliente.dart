@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
+import 'package:login_bloc/Pages/Page_clientes/formulario_cliente.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
 import 'package:login_bloc/utils/color.dart';
 
@@ -78,9 +79,18 @@ class DetalleCliente extends StatelessWidget {
           ]),
       actions: [
         IconAction(Icons.delete_forever_rounded, darkRed, () {
-          return DialogDelete.shared.show(context, "cliente", "id = ?", [cliente.id.toString()]);
+          return DialogDelete.shared
+              .show(context, "cliente", "id = ?", [cliente.id.toString()]);
         }),
-        IconAction(Icons.edit, Colors.blue[600], () {}),
+        IconAction(Icons.edit, Colors.blue[600], () {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (cxt) => FormularioCliente(
+                        cliente: cliente,
+                      )));
+        }),
         IconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),
