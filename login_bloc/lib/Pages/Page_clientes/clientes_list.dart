@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/formulario_cliente.dart';
+import 'package:login_bloc/Pages/Page_clientes/new_column_cliente.dart';
 import 'package:login_bloc/Pages/Page_clientes/widgets/cliente_card.dart';
 import 'package:login_bloc/Repository/cliente_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
@@ -67,7 +68,12 @@ class ClientesList extends StatelessWidget {
                 SpeedDialChild(
                     child: const Icon(Icons.add_card_rounded),
                     label: "Agregar columna",
-                    onTap: () {})
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (cxt) => NewColumnCliente()));
+                    })
               ],
             ),
           );

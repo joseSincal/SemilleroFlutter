@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
 import 'package:login_bloc/Pages/Page_seguros/formulario_seguro.dart';
+import 'package:login_bloc/Pages/Page_seguros/new_columns_seguro.dart';
 import 'package:login_bloc/Pages/Page_seguros/widgets/seguro_card.dart';
 import 'package:login_bloc/Repository/seguro_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
@@ -67,7 +68,12 @@ class SegurosList extends StatelessWidget {
                 SpeedDialChild(
                     child: const Icon(Icons.add_card_rounded),
                     label: "Agregar columna",
-                    onTap: () {})
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (cxt) => NewColumnSeguro()));
+                    })
               ],
             ),
           );
