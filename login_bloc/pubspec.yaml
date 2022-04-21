@@ -54,6 +54,7 @@ dependencies:
   material_dialogs: ^1.1.1
   flutter_speed_dial: ^5.1.0
   fluttertoast: ^8.0.9
+  getwidget: ^2.0.5
 
 dev_dependencies:
   flutter_test:

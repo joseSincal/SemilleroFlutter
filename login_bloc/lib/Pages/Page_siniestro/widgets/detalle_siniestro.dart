@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
+import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
 import 'package:login_bloc/utils/color.dart';
 
@@ -84,7 +85,15 @@ class DetalleSiniestro extends StatelessWidget {
           return DialogDelete.shared
               .show(context, "siniestro", "id = ?", [siniestro.id.toString()]);
         }),
-        IconAction(Icons.edit, Colors.blue[600], () {}),
+        IconAction(Icons.edit, Colors.blue[600], () {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (cxt) => FormularioSiniestro(
+                        siniestro: siniestro,
+                      )));
+        }),
         IconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),

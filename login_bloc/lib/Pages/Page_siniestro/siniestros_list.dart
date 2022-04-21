@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
+import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Pages/Page_siniestro/widgets/siniestro_card.dart';
 import 'package:login_bloc/Repository/siniestro_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
@@ -58,7 +59,12 @@ class SiniestrosList extends StatelessWidget {
                 SpeedDialChild(
                     child: const Icon(Icons.add_alert_rounded),
                     label: "Agregar siniestro",
-                    onTap: () {}),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (cxt) => FormularioSiniestro()));
+                    }),
                 SpeedDialChild(
                     child: const Icon(Icons.add_card_rounded),
                     label: "Agregar columna",

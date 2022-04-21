@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Repository/cliente_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
@@ -144,47 +141,40 @@ class FormularioCliente extends StatelessWidget {
                 height: height + 5,
               ),
               ButtonLarge(
-                  buttonText: "Registrar",
+                  buttonText: cliente != null ? "Actualizar" : "Registrar",
                   onPressed: () {
-                    var datos = {
-                      'dniCl': int.parse(_dniController.text),
-                      'nombreCl': _nombreController.text,
-                      'apellido1': _apellido1Controller.text,
-                      'apellido2': _apellido2Controller.text,
-                      'telefono': int.parse(_telController.text),
-                      'ciudad': _ciudadController.text,
-                      'codPostal': _postalController.text.isEmpty
-                          ? 0
-                          : int.parse(_postalController.text),
-                      'claseVia': _claseVController.text,
-                      'nombreVia': _nombreVController.text,
-                      'numeroVia': _numVController.text.isEmpty
-                          ? 0
-                          : int.parse(_numVController.text),
-                      'observaciones': _observacionesController.text,
-                    };
-                    var nuevosDatos = Cliente.fromService(datos);
+                    if (_dniController.text.isEmpty ||
+                        _nombreController.text.isEmpty ||
+                        _apellido1Controller.text.isEmpty ||
+                        _telController.text.isEmpty) {
+                      showToast("Error, debe llenar los campos obligatorios");
+                    } else {
+                      var datos = {
+                        'dniCl': int.parse(_dniController.text),
+                        'nombreCl': _nombreController.text,
+                        'apellido1': _apellido1Controller.text,
+                        'apellido2': _apellido2Controller.text,
+                        'telefono': int.parse(_telController.text),
+                        'ciudad': _ciudadController.text,
+                        'codPostal': _postalController.text.isEmpty
+                            ? 0
+                            : int.parse(_postalController.text),
+                        'claseVia': _claseVController.text,
+                        'nombreVia': _nombreVController.text,
+                        'numeroVia': _numVController.text.isEmpty
+                            ? 0
+                            : int.parse(_numVController.text),
+                        'observaciones': _observacionesController.text,
+                      };
+                      var nuevosDatos = Cliente.fromService(datos);
 
-                    if (cliente != null) {
-                      if (_dniController.text.isEmpty ||
-                          _nombreController.text.isEmpty ||
-                          _apellido1Controller.text.isEmpty ||
-                          _telController.text.isEmpty) {
-                        // no se puede sino llena los campos
-                      } else {
+                      if (cliente != null) {
                         ClienteRepository.shared.update(
                             tablaName: 'cliente',
                             data: datos,
                             whereClause: "id = ?",
                             whereArgs: ["${cliente?.id}"]);
                         Navigator.pop(context);
-                      }
-                    } else {
-                      if (_dniController.text.isEmpty ||
-                          _nombreController.text.isEmpty ||
-                          _apellido1Controller.text.isEmpty ||
-                          _telController.text.isEmpty) {
-                        // no se puede sino llena los campos
                       } else {
                         ClienteRepository.shared
                             .save(data: [nuevosDatos], tableName: 'cliente');
@@ -197,5 +187,10 @@ class FormularioCliente extends StatelessWidget {
         )
       ]),
     );
+  }
+
+  Future showToast(String msg) async {
+    await Fluttertoast.cancel();
+    Fluttertoast.showToast(msg: msg, fontSize: 18.0);
   }
 }
