@@ -1,19 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
-import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
-import 'package:login_bloc/Providers/theme.dart';
 import 'package:login_bloc/Repository/seguro_repository.dart';
-import 'package:login_bloc/Repository/siniestro_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
-import 'package:provider/provider.dart';
 
 class FormularioSiniestro extends StatelessWidget {
   Siniestro? siniestro;
@@ -118,19 +115,23 @@ class FormularioSiniestro extends StatelessWidget {
                         'indenmizacion': _indemnizacionController.text,
                         'seguro': seguro.first,
                       };
-                      var nuevosDatos = Siniestro.fromService(datos);
 
                       if (siniestro != null) {
                         datos['seguro'] = jsonEncode(seguro.first);
-                        SiniestroRepository.shared.update(
+                        /*SiniestroRepository.shared.update(
                             tablaName: 'siniestro',
                             data: datos,
                             whereClause: "id = ?",
-                            whereArgs: ["${siniestro?.id}"]);
+                            whereArgs: ["${siniestro?.id}"]);*/
+                        BlocProvider.of<CrudSiniestroBloc>(context).add(
+                            ButtonUpdate(siniestro: datos, id: siniestro!.id));
                         Navigator.pop(context);
                       } else {
-                        SiniestroRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'siniestro');
+                        var nuevosDatos = Siniestro.fromService(datos);
+                        /*SiniestroRepository.shared
+                            .save(data: [nuevosDatos], tableName: 'siniestro');*/
+                        BlocProvider.of<CrudSiniestroBloc>(context)
+                            .add(ButtonAdd(siniestro: nuevosDatos));
                         Navigator.pop(context);
                       }
                     }

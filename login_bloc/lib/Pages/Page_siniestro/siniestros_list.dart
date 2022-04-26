@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Pages/Page_siniestro/new_column_siniestro.dart';
 import 'package:login_bloc/Pages/Page_siniestro/widgets/siniestro_card.dart';
-import 'package:login_bloc/Repository/siniestro_repository.dart';
+import 'package:login_bloc/Providers/siniestro_provider.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/utils/color.dart';
@@ -14,7 +16,97 @@ class SiniestrosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<SiniestroCard>> _obtenerData() async {
+    List<dynamic> siniestrosDb = List<dynamic>.empty(growable: true);
+    List<SiniestroCard> siniestros = List<SiniestroCard>.empty(growable: true);
+
+    return Scaffold(
+      body: BlocProvider(
+        create: (BuildContext context) => CrudSiniestroBloc(),
+        child: BlocListener<CrudSiniestroBloc, CrudSiniestroState>(
+            listener: ((context, state) async {
+          switch (state.runtimeType) {
+            case Searching:
+              siniestrosDb.clear();
+              siniestrosDb = await SiniestroProvider.shared.getAllDb();
+              break;
+            case Found:
+              siniestros.clear();
+              for (var item in siniestrosDb) {
+                siniestros.add(SiniestroCard(
+                  siniestro: Siniestro.fromDb(item),
+                ));
+              }
+              break;
+            case SaveError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content:
+                        Text('No se guardó el siniestro, debido a un error')),
+              );
+              break;
+            case UpdateError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Error, no se pudo actualizar el siniestro')),
+              );
+              break;
+            case RemoveError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Error al intentar eliminar')),
+              );
+              break;
+          }
+        }), child: BlocBuilder<CrudSiniestroBloc, CrudSiniestroState>(
+                builder: ((context, state) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                Background(height: null),
+                const AppBarTitle(title: 'Siniestros'),
+                Container(
+                  margin: const EdgeInsets.only(top: 100),
+                  child: ListView(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    children: siniestros,
+                  ),
+                )
+              ],
+            ),
+            floatingActionButton: SpeedDial(
+              backgroundColor: Colors.white,
+              foregroundColor: darkSienna,
+              overlayColor: Colors.black,
+              overlayOpacity: 0.1,
+              spacing: 12.0,
+              spaceBetweenChildren: 12.0,
+              animatedIcon: AnimatedIcons.menu_close,
+              children: [
+                SpeedDialChild(
+                    child: const Icon(Icons.add_alert_rounded),
+                    label: "Agregar siniestro",
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (cxt) => FormularioSiniestro()));
+                    }),
+                SpeedDialChild(
+                    child: const Icon(Icons.add_card_rounded),
+                    label: "Agregar columna",
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (cxt) => NewColumnSiniestro()));
+                    })
+              ],
+            ),
+          );
+        }))),
+      ),
+    );
+
+    /*Future<List<SiniestroCard>> _obtenerData() async {
       List<SiniestroCard> siniestros =
           List<SiniestroCard>.empty(growable: true);
       List<dynamic> listaSiniestros =
@@ -84,6 +176,6 @@ class SiniestrosList extends StatelessWidget {
           );
         }
       },
-    ));
+    ));*/
   }
 }
