@@ -16,7 +16,7 @@ class SegurosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> segurosDb = List<SeguroCard>.empty(growable: true);
+    List<dynamic> segurosDb = List<dynamic>.empty(growable: true);
     List<SeguroCard> seguros = List<SeguroCard>.empty(growable: true);
 
     return Scaffold(

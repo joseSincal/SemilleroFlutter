@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart' as crud_seg;
 import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
-import 'package:login_bloc/Repository/cliente_repository.dart';
+import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart' as crud_cli;
+import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Repository/siniestro_repository.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
@@ -33,14 +35,17 @@ class DialogDelete {
               onPressed: () async {
                 switch (nameTable) {
                   case "cliente":
-                    await ClienteRepository.shared.delete(
+                  BlocProvider.of<CrudClienteBloc>(context).add(
+                      crud_cli.ButtonRemove(condition: condicion, args: args)
+                    );
+                    /*await ClienteRepository.shared.delete(
                         tablaName: nameTable,
                         whereClause: condicion,
-                        whereArgs: args);
+                        whereArgs: args);*/
                     break;
                   case "seguro":
                     BlocProvider.of<CrudBloc>(context).add(
-                      ButtonRemove(condition: condicion, args: args)
+                      crud_seg.ButtonRemove(condition: condicion, args: args)
                     );
                     /*await SeguroRepository.shared.delete(
                         tablaName: nameTable,

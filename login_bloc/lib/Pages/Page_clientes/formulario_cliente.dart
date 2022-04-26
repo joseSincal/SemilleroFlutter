@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
-import 'package:login_bloc/Repository/cliente_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
@@ -166,19 +167,23 @@ class FormularioCliente extends StatelessWidget {
                             : int.parse(_numVController.text),
                         'observaciones': _observacionesController.text,
                       };
-                      var nuevosDatos = Cliente.fromService(datos);
 
                       if (cliente != null) {
-                        ClienteRepository.shared.update(
+                        /*ClienteRepository.shared.update(
                             tablaName: 'cliente',
                             data: datos,
                             whereClause: "id = ?",
-                            whereArgs: ["${cliente?.id}"]);
+                            whereArgs: ["${cliente?.id}"]);*/
+                        BlocProvider.of<CrudClienteBloc>(context)
+                            .add(ButtonUpdate(cliente: datos, id: cliente!.id));
                         Navigator.pop(context);
                       } else {
-                        ClienteRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'cliente');
-                        Navigator.pop(context, nuevosDatos);
+                        var nuevosDatos = Cliente.fromService(datos);
+                        /*ClienteRepository.shared
+                            .save(data: [nuevosDatos], tableName: 'cliente');*/
+                        BlocProvider.of<CrudClienteBloc>(context)
+                            .add(ButtonAdd(cliente: nuevosDatos));
+                        Navigator.pop(context);
                       }
                     }
                   })
