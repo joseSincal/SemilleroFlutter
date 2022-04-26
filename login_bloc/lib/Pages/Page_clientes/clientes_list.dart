@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
@@ -61,9 +63,17 @@ class ClientesList extends StatelessWidget {
                     label: "Agregar cliente",
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cxt) => FormularioCliente()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (cxt) => FormularioCliente()))
+                          .then((value) => {
+                                if (value != null)
+                                  {
+                                    listaCardClientes.add(ClienteCard(
+                                      cliente: value,
+                                    ))
+                                  }
+                              });
                     }),
                 SpeedDialChild(
                     child: const Icon(Icons.add_card_rounded),

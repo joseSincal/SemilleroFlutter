@@ -45,7 +45,7 @@ class ApiManager {
     }
 
     Position pos = await LocationProvider().determinePosition();
-    //await AgregarPeticion.shared.AddPeticion(pos, response.statusCode, uri.toString(), type);
+    await AgregarPeticion.shared.AddPeticion(pos, response.statusCode, uri.toString(), type);
 
     if (response.statusCode == 200) {
       if (response.body != "") {

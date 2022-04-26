@@ -178,7 +178,7 @@ class FormularioCliente extends StatelessWidget {
                       } else {
                         ClienteRepository.shared
                             .save(data: [nuevosDatos], tableName: 'cliente');
-                        Navigator.pop(context);
+                        Navigator.pop(context, nuevosDatos);
                       }
                     }
                   })

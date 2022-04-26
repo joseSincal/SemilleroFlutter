@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
 import 'package:login_bloc/Repository/cliente_repository.dart';
-import 'package:login_bloc/Repository/db_manager.dart';
-import 'package:login_bloc/Repository/master_repository.dart';
-import 'package:login_bloc/Repository/seguro_repository.dart';
 import 'package:login_bloc/Repository/siniestro_repository.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
@@ -40,10 +39,13 @@ class DialogDelete {
                         whereArgs: args);
                     break;
                   case "seguro":
-                    await SeguroRepository.shared.delete(
+                    BlocProvider.of<CrudBloc>(context).add(
+                      ButtonRemove(condition: condicion, args: args)
+                    );
+                    /*await SeguroRepository.shared.delete(
                         tablaName: nameTable,
                         whereClause: condicion,
-                        whereArgs: args);
+                        whereArgs: args);*/
                     break;
                   case "siniestro":
                     await SiniestroRepository.shared.delete(

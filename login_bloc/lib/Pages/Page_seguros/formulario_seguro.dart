@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
-import 'package:login_bloc/Repository/seguro_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
@@ -121,18 +122,24 @@ class FormularioSeguro extends StatelessWidget {
                         'observaciones': _observacionController.text,
                         'dniCl': int.parse(_dniController.text),
                       };
-                      var nuevosDatos = Seguro.fromService(datos);
 
                       if (seguro != null) {
-                        SeguroRepository.shared.update(
+                        BlocProvider.of<CrudBloc>(context).add(
+                          ButtonUpdate(seguro: datos, id: seguro!.id)
+                        );
+                        /*SeguroRepository.shared.update(
                             tablaName: 'seguro',
                             data: datos,
                             whereClause: "id = ?",
-                            whereArgs: ["${seguro?.id}"]);
+                            whereArgs: ["${seguro?.id}"]);*/
                         Navigator.pop(context);
                       } else {
-                        SeguroRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'seguro');
+                        var nuevosDatos = Seguro.fromService(datos);
+                        BlocProvider.of<CrudBloc>(context).add(
+                          ButtonAdd(seguro: nuevosDatos)
+                        );
+                        /*SeguroRepository.shared
+                            .save(data: [nuevosDatos], tableName: 'seguro');*/
                         Navigator.pop(context);
                       }
                     }
