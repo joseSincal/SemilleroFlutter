@@ -16,14 +16,14 @@ class Cliente {
     dniCl = data['dniCl'];
     nombreCl = data['nombreCl'];
     apellido1 = data['apellido1'];
-    apellido2 = data['apellido2'];
-    claseVia = data['claseVia'];
-    nombreVia = data['nombreVia'];
-    numeroVia = data['numeroVia'];
-    codPostal = data['codPostal'];
-    ciudad = data['ciudad'];
+    apellido2 = data['apellido2']??"";
+    claseVia = data['claseVia']??"";
+    nombreVia = data['nombreVia']??"";
+    numeroVia = data['numeroVia']??0;
+    codPostal = data['codPostal']??0;
+    ciudad = data['ciudad']??"";
     telefono = data['telefono'];
-    observaciones = data['observaciones'];
+    observaciones = data['observaciones']??"";
   }
 
   Cliente.fromDb(Map<String, dynamic> data) {

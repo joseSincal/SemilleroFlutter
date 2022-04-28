@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
@@ -16,8 +17,18 @@ class ClientesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> clientesDb = List<dynamic>.empty(growable: true);
-    List<ClienteCard> clientes = List<ClienteCard>.empty(growable: true);
+    Future<List<ClienteCard>> _cargarLista(BuildContext context) async {
+      List<ClienteCard> clientes = List<ClienteCard>.empty(growable: true);
+      List<dynamic> clientesDb = await ClienteProvider.shared.getAllDb();
+      for (var item in clientesDb) {
+        clientes.add(ClienteCard(
+          cliente: Cliente.fromDb(item),
+          contextList: context,
+        ));
+      }
+      return clientes;
+      //BlocProvider.of<CrudClienteBloc>(context).add(EndSearching());
+    }
 
     return Scaffold(
       body: BlocProvider(
@@ -25,18 +36,6 @@ class ClientesList extends StatelessWidget {
         child: BlocListener<CrudClienteBloc, CrudClienteState>(
           listener: ((context, state) async {
             switch (state.runtimeType) {
-              case Searching:
-                clientesDb.clear();
-                clientesDb = await ClienteProvider.shared.getAllDb();
-                break;
-              case Found:
-                clientes.clear();
-                for (var item in clientesDb) {
-                  clientes.add(ClienteCard(
-                    cliente: Cliente.fromDb(item),
-                  ));
-                }
-                break;
               case SaveError:
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -59,55 +58,98 @@ class ClientesList extends StatelessWidget {
           }),
           child: BlocBuilder<CrudClienteBloc, CrudClienteState>(
               builder: ((context, state) {
-            return Scaffold(
-              body: Stack(
-                children: [
-                  Background(height: null),
-                  const AppBarTitle(title: 'Clientes'),
-                  Container(
-                    margin: const EdgeInsets.only(top: 100),
-                    child: ListView(
-                      padding: const EdgeInsets.only(bottom: 25),
-                      children: clientes,
+            return FutureBuilder(
+              future: _cargarLista(context),
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasData) {
+                  List<ClienteCard> listaCardClientes =
+                      snapshot.requireData as List<ClienteCard>;
+                  return Scaffold(
+                    body: Stack(
+                      children: [
+                        Background(height: null),
+                        const AppBarTitle(title: 'Clientes'),
+                        Container(
+                          margin: const EdgeInsets.only(top: 100),
+                          child: ListView(
+                            padding: const EdgeInsets.only(bottom: 25),
+                            children: listaCardClientes,
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-              floatingActionButton: SpeedDial(
-                backgroundColor: Colors.white,
-                foregroundColor: darkSienna,
-                overlayColor: Colors.black,
-                overlayOpacity: 0.1,
-                spacing: 12.0,
-                spaceBetweenChildren: 12.0,
-                animatedIcon: AnimatedIcons.menu_close,
-                children: [
-                  SpeedDialChild(
-                      child: const Icon(Icons.person_add_alt_rounded),
-                      label: "Agregar cliente",
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (cxt) => FormularioCliente()));
-                      }),
-                  SpeedDialChild(
-                      child: const Icon(Icons.add_card_rounded),
-                      label: "Agregar columna",
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (cxt) => NewColumnCliente()));
-                      })
-                ],
-              ),
+                    floatingActionButton: OfflineBuilder(
+                      connectivityBuilder: (
+                        BuildContext context,
+                        ConnectivityResult connectivity,
+                        Widget child,
+                      ) {
+                        final bool connected =
+                            connectivity != ConnectivityResult.none;
+                        return SpeedDial(
+                          backgroundColor: Colors.white,
+                          foregroundColor: darkSienna,
+                          overlayColor: Colors.black,
+                          overlayOpacity: 0.1,
+                          spacing: 12.0,
+                          spaceBetweenChildren: 12.0,
+                          animatedIcon: AnimatedIcons.menu_close,
+                          children: [
+                            SpeedDialChild(
+                                child: const Icon(Icons.person_add_alt_rounded),
+                                label: "Agregar cliente",
+                                onTap: () {
+                                  if (connected) {
+                                    Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (cxt) =>
+                                                    FormularioCliente()))
+                                        .then((value) => {
+                                              if (value != null)
+                                                {
+                                                  BlocProvider.of<
+                                                              CrudClienteBloc>(
+                                                          context)
+                                                      .add(ButtonAdd(
+                                                          cliente: value))
+                                                }
+                                            });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'No puede realizar la operación sin internet')),
+                                    );
+                                  }
+                                }),
+                            SpeedDialChild(
+                                child: const Icon(Icons.add_card_rounded),
+                                label: "Agregar columna",
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (cxt) =>
+                                              NewColumnCliente()));
+                                })
+                          ],
+                        );
+                      },
+                      child: const Text("Hola"),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             );
           })),
         ),
       ),
     );
-
 
     /*Future<List<ClienteCard>> _obtenerData() async {
       List<ClienteCard> clientes = List<ClienteCard>.empty(growable: true);

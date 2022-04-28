@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/widgets/detalle_cliente.dart';
@@ -10,7 +7,10 @@ import 'package:provider/provider.dart';
 
 class ClienteCard extends StatelessWidget {
   final Cliente cliente;
-  const ClienteCard({Key? key, required this.cliente}) : super(key: key);
+  final BuildContext contextList;
+  const ClienteCard(
+      {Key? key, required this.cliente, required this.contextList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,10 @@ class ClienteCard extends StatelessWidget {
       onTap: () {
         showDialog(
             context: context,
-            builder: (context) => DetalleCliente(cliente: cliente));
+            builder: (context) => DetalleCliente(
+                  cliente: cliente,
+                  contextList: contextList,
+                ));
       },
       child: infoCard,
     );

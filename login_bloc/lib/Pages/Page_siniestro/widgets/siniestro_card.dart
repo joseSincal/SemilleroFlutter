@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 
 class SiniestroCard extends StatelessWidget {
   final Siniestro siniestro;
-  const SiniestroCard({Key? key, required this.siniestro}) : super(key: key);
+  final BuildContext contextList;
+  const SiniestroCard({Key? key, required this.siniestro, required this.contextList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +101,8 @@ class SiniestroCard extends StatelessWidget {
       onTap: () {
         showDialog(
             context: context,
-            builder: (context) => DetalleSiniestro(siniestro: siniestro));
+            builder: (context) => DetalleSiniestro(siniestro: siniestro,
+                  contextList: contextList,));
       },
       child: infoCard,
     );

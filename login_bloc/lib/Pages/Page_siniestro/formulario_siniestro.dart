@@ -123,16 +123,16 @@ class FormularioSiniestro extends StatelessWidget {
                             data: datos,
                             whereClause: "id = ?",
                             whereArgs: ["${siniestro?.id}"]);*/
-                        BlocProvider.of<CrudSiniestroBloc>(context).add(
-                            ButtonUpdate(siniestro: datos, id: siniestro!.id));
-                        Navigator.pop(context);
+                        /*BlocProvider.of<CrudSiniestroBloc>(context).add(
+                            ButtonUpdate(siniestro: datos, id: siniestro!.id));*/
+                        Navigator.pop(context, [datos, siniestro!.id]);
                       } else {
                         var nuevosDatos = Siniestro.fromService(datos);
                         /*SiniestroRepository.shared
                             .save(data: [nuevosDatos], tableName: 'siniestro');*/
-                        BlocProvider.of<CrudSiniestroBloc>(context)
-                            .add(ButtonAdd(siniestro: nuevosDatos));
-                        Navigator.pop(context);
+                        /*BlocProvider.of<CrudSiniestroBloc>(context)
+                            .add(ButtonAdd(siniestro: nuevosDatos));*/
+                        Navigator.pop(context, [nuevosDatos]);
                       }
                     }
                   })

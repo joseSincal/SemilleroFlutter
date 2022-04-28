@@ -15,8 +15,8 @@ class Seguro {
     ramo = data['ramo'];
     fechaInicio = DateFormat("dd-MM-yyyy").parse(data['fechaInicio']);
     fechaVencimiento = DateFormat("dd-MM-yyyy").parse(data['fechaVencimiento']);
-    condicionesParticulares = data['condicionesParticulares'];
-    observaciones = data['observaciones'];
+    condicionesParticulares = data['condicionesParticulares']??"";
+    observaciones = data['observaciones']??"";
     dniCl = data['dniCl'];
   }
 

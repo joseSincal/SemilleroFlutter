@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 
 class SeguroCard extends StatelessWidget {
   final Seguro seguro;
-  const SeguroCard({Key? key, required this.seguro}) : super(key: key);
+  final BuildContext contextList;
+  const SeguroCard({Key? key, required this.seguro, required this.contextList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,10 @@ class SeguroCard extends StatelessWidget {
       onTap: () {
         showDialog(
             context: context,
-            builder: (context) => DetalleSeguro(seguro: seguro));
+            builder: (context) => DetalleSeguro(
+                  seguro: seguro,
+                  contextList: contextList,
+                ));
       },
       child: infoCard,
     );

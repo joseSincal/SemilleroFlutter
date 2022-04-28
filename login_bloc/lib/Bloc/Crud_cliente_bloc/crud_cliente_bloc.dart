@@ -7,7 +7,7 @@ part 'crud_cliente_event.dart';
 part 'crud_cliente_state.dart';
 
 class CrudClienteBloc extends Bloc<CrudClienteEvent, CrudClienteState> {
-  CrudClienteBloc() : super(InitPage()) {
+  CrudClienteBloc() : super(Searching()) {
     on<ButtonAdd>((event, emit) async {
       emit(Saving());
       Cliente cliente = event.cliente;
@@ -22,8 +22,7 @@ class CrudClienteBloc extends Bloc<CrudClienteEvent, CrudClienteState> {
       emit(Updating());
       Map<String, dynamic> cliente = event.cliente;
       int id = event.id;
-      dynamic data =
-          await ClienteProvider.shared.updateCliente(cliente, id);
+      dynamic data = await ClienteProvider.shared.updateCliente(cliente, id);
       await Future.delayed(const Duration(microseconds: 1000));
       data != null ? emit(Updated()) : emit(UpdateError());
       await Future.delayed(const Duration(microseconds: 500));

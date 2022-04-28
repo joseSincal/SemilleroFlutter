@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
@@ -174,16 +172,17 @@ class FormularioCliente extends StatelessWidget {
                             data: datos,
                             whereClause: "id = ?",
                             whereArgs: ["${cliente?.id}"]);*/
-                        BlocProvider.of<CrudClienteBloc>(context)
-                            .add(ButtonUpdate(cliente: datos, id: cliente!.id));
-                        Navigator.pop(context);
+                        /*BlocProvider.of<CrudClienteBloc>(context)
+                            .add(ButtonUpdate(cliente: datos, id: cliente!.id));*/
+                        Navigator.pop(context, [datos, cliente!.id]);
                       } else {
                         var nuevosDatos = Cliente.fromService(datos);
                         /*ClienteRepository.shared
                             .save(data: [nuevosDatos], tableName: 'cliente');*/
-                        BlocProvider.of<CrudClienteBloc>(context)
-                            .add(ButtonAdd(cliente: nuevosDatos));
-                        Navigator.pop(context);
+
+                        /*BlocProvider.of<CrudClienteBloc>(context)
+                            .add(ButtonAdd(cliente: nuevosDatos));*/
+                        Navigator.pop(context, nuevosDatos);
                       }
                     }
                   })

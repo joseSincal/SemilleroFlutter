@@ -15,9 +15,9 @@ class Siniestro {
   Siniestro.fromService(Map<String, dynamic> data) {
     idSiniestro = data['idSiniestro'];
     fechaSiniestro = DateFormat("dd-MM-yyyy").parse(data['fechaSiniestro']);
-    causas = data['causas'];
+    causas = data['causas']??"";
     aceptado = data['aceptado'] == "1";
-    indenmizacion = data['indenmizacion'];
+    indenmizacion = data['indenmizacion']??0;
     seguro = Seguro.fromService(data['seguro']);
   }
 

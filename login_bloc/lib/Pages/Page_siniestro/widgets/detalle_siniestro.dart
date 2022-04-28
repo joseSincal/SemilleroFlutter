@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:intl/intl.dart';
+import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
@@ -7,7 +10,10 @@ import 'package:login_bloc/utils/color.dart';
 
 class DetalleSiniestro extends StatelessWidget {
   final Siniestro siniestro;
-  const DetalleSiniestro({Key? key, required this.siniestro}) : super(key: key);
+  final BuildContext contextList;
+  const DetalleSiniestro(
+      {Key? key, required this.siniestro, required this.contextList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,19 +87,59 @@ class DetalleSiniestro extends StatelessWidget {
             ),
           ]),
       actions: [
-        IconAction(Icons.delete_forever_rounded, darkRed, () {
-          return DialogDelete.shared
-              .show(context, "siniestro", "id = ?", [siniestro.id.toString()]);
-        }),
-        IconAction(Icons.edit, Colors.blue[600], () {
-          Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (cxt) => FormularioSiniestro(
-                        siniestro: siniestro,
-                      )));
-        }),
+        OfflineBuilder(
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return IconAction(Icons.delete_forever_rounded, darkRed, () {
+              if (connected) {
+                return DialogDelete.shared.show(contextList, "siniestro",
+                    "id = ?", [siniestro.id.toString()]);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('No puede realizar la operación sin internet')),
+                );
+              }
+            });
+          },
+          child: const Text("Hola"),
+        ),
+        OfflineBuilder(
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return IconAction(Icons.edit, Colors.blue[600], () {
+              if (connected) {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (cxt) => FormularioSiniestro(
+                              siniestro: siniestro,
+                            ))).then((value) => {
+                      //aqui se debe hacer el update
+                      BlocProvider.of<CrudSiniestroBloc>(contextList)
+                          .add(ButtonUpdate(siniestro: value[0], id: value[1]))
+                    });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('No puede realizar la operación sin internet')),
+                );
+              }
+            });
+          },
+          child: const Text("Hola"),
+        ),
         IconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),

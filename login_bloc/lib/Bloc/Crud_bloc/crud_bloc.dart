@@ -7,7 +7,7 @@ part 'crud_state.dart';
 part 'crud_event.dart';
 
 class CrudBloc extends Bloc<CrudEvent, CrudState> {
-  CrudBloc() : super(InitPage()) {
+  CrudBloc() : super(Searching()) {
     on<ButtonAdd>((event, emit) async {
       emit(Saving());
       Seguro seguro = event.seguro;

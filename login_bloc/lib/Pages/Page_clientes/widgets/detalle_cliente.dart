@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
+import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/formulario_cliente.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
@@ -6,7 +9,10 @@ import 'package:login_bloc/utils/color.dart';
 
 class DetalleCliente extends StatelessWidget {
   final Cliente cliente;
-  const DetalleCliente({Key? key, required this.cliente}) : super(key: key);
+  final BuildContext contextList;
+  const DetalleCliente(
+      {Key? key, required this.cliente, required this.contextList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,19 +84,59 @@ class DetalleCliente extends StatelessWidget {
             ),
           ]),
       actions: [
-        IconAction(Icons.delete_forever_rounded, darkRed, () {
-          return DialogDelete.shared
-              .show(context, "cliente", "id = ?", [cliente.id.toString()]);
-        }),
-        IconAction(Icons.edit, Colors.blue[600], () {
-          Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (cxt) => FormularioCliente(
-                        cliente: cliente,
-                      )));
-        }),
+        OfflineBuilder(
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return IconAction(Icons.delete_forever_rounded, darkRed, () {
+              if (connected) {
+                return DialogDelete.shared.show(
+                    contextList, "cliente", "id = ?", [cliente.id.toString()]);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('No puede realizar la operación sin internet')),
+                );
+              }
+            });
+          },
+          child: const Text("Hola"),
+        ),
+        OfflineBuilder(
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
+            final bool connected = connectivity != ConnectivityResult.none;
+            return IconAction(Icons.edit, Colors.blue[600], () {
+              if (connected) {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (cxt) => FormularioCliente(
+                              cliente: cliente,
+                            ))).then((value) => {
+                      //aqui se debe hacer el update
+                      BlocProvider.of<CrudClienteBloc>(contextList)
+                          .add(ButtonUpdate(cliente: value[0], id: value[1]))
+                    });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('No puede realizar la operación sin internet')),
+                );
+              }
+            });
+          },
+          child: const Text("Hola"),
+        ),
         IconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),

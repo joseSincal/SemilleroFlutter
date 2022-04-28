@@ -7,7 +7,7 @@ part 'crud_siniestro_state.dart';
 part 'crud_siniestro_event.dart';
 
 class CrudSiniestroBloc extends Bloc<CrudSiniestroEvent, CrudSiniestroState> {
-  CrudSiniestroBloc() : super(InitPage()) {
+  CrudSiniestroBloc() : super(Searching()) {
     on<ButtonAdd>((event, emit) async {
       emit(Saving());
       Siniestro siniestro = event.siniestro;

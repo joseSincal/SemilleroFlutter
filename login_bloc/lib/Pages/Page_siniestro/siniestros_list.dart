@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
@@ -16,8 +17,18 @@ class SiniestrosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> siniestrosDb = List<dynamic>.empty(growable: true);
-    List<SiniestroCard> siniestros = List<SiniestroCard>.empty(growable: true);
+    Future<List<SiniestroCard>> _obtenerData(BuildContext context) async {
+      List<SiniestroCard> siniestros =
+          List<SiniestroCard>.empty(growable: true);
+      List<dynamic> listaSiniestros = await SiniestroProvider.shared.getAllDb();
+      for (var item in listaSiniestros) {
+        siniestros.add(SiniestroCard(
+          siniestro: Siniestro.fromDb(item),
+          contextList: context,
+        ));
+      }
+      return siniestros;
+    }
 
     return Scaffold(
       body: BlocProvider(
@@ -25,18 +36,6 @@ class SiniestrosList extends StatelessWidget {
         child: BlocListener<CrudSiniestroBloc, CrudSiniestroState>(
             listener: ((context, state) async {
           switch (state.runtimeType) {
-            case Searching:
-              siniestrosDb.clear();
-              siniestrosDb = await SiniestroProvider.shared.getAllDb();
-              break;
-            case Found:
-              siniestros.clear();
-              for (var item in siniestrosDb) {
-                siniestros.add(SiniestroCard(
-                  siniestro: Siniestro.fromDb(item),
-                ));
-              }
-              break;
             case SaveError:
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -58,49 +57,92 @@ class SiniestrosList extends StatelessWidget {
           }
         }), child: BlocBuilder<CrudSiniestroBloc, CrudSiniestroState>(
                 builder: ((context, state) {
-          return Scaffold(
-            body: Stack(
-              children: [
-                Background(height: null),
-                const AppBarTitle(title: 'Siniestros'),
-                Container(
-                  margin: const EdgeInsets.only(top: 100),
-                  child: ListView(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    children: siniestros,
-                  ),
-                )
-              ],
-            ),
-            floatingActionButton: SpeedDial(
-              backgroundColor: Colors.white,
-              foregroundColor: darkSienna,
-              overlayColor: Colors.black,
-              overlayOpacity: 0.1,
-              spacing: 12.0,
-              spaceBetweenChildren: 12.0,
-              animatedIcon: AnimatedIcons.menu_close,
-              children: [
-                SpeedDialChild(
-                    child: const Icon(Icons.add_alert_rounded),
-                    label: "Agregar siniestro",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cxt) => FormularioSiniestro()));
-                    }),
-                SpeedDialChild(
-                    child: const Icon(Icons.add_card_rounded),
-                    label: "Agregar columna",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cxt) => NewColumnSiniestro()));
-                    })
-              ],
-            ),
+          return FutureBuilder(
+            future: _obtenerData(context),
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.hasData) {
+                List<SiniestroCard> listaCardSiniestros =
+                    snapshot.requireData as List<SiniestroCard>;
+                return Scaffold(
+                    body: Stack(
+                      children: [
+                        Background(height: null),
+                        const AppBarTitle(title: 'Siniestros'),
+                        Container(
+                          margin: const EdgeInsets.only(top: 100),
+                          child: ListView(
+                            padding: const EdgeInsets.only(bottom: 25),
+                            children: listaCardSiniestros,
+                          ),
+                        )
+                      ],
+                    ),
+                    floatingActionButton: OfflineBuilder(
+                        connectivityBuilder: (
+                          BuildContext context,
+                          ConnectivityResult connectivity,
+                          Widget child,
+                        ) {
+                          final bool connected =
+                              connectivity != ConnectivityResult.none;
+                          return SpeedDial(
+                            backgroundColor: Colors.white,
+                            foregroundColor: darkSienna,
+                            overlayColor: Colors.black,
+                            overlayOpacity: 0.1,
+                            spacing: 12.0,
+                            spaceBetweenChildren: 12.0,
+                            animatedIcon: AnimatedIcons.menu_close,
+                            children: [
+                              SpeedDialChild(
+                                  child: const Icon(Icons.add_alert_rounded),
+                                  label: "Agregar siniestro",
+                                  onTap: () {
+                                    if (connected) {
+                                      Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (cxt) =>
+                                                      FormularioSiniestro()))
+                                          .then((value) => {
+                                                if (value != null)
+                                                  {
+                                                    BlocProvider.of<
+                                                                CrudSiniestroBloc>(
+                                                            context)
+                                                        .add(ButtonAdd(
+                                                            siniestro: value))
+                                                  }
+                                              });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'No puede realizar la operación sin internet')),
+                                      );
+                                    }
+                                  }),
+                              SpeedDialChild(
+                                  child: const Icon(Icons.add_card_rounded),
+                                  label: "Agregar columna",
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (cxt) =>
+                                                NewColumnSiniestro()));
+                                  })
+                            ],
+                          );
+                        },
+                        child: const Text("Hola")));
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           );
         }))),
       ),

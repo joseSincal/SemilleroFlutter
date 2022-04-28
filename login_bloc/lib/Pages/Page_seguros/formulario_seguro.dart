@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
@@ -124,23 +122,23 @@ class FormularioSeguro extends StatelessWidget {
                       };
 
                       if (seguro != null) {
-                        BlocProvider.of<CrudBloc>(context).add(
+                        /*BlocProvider.of<CrudBloc>(context).add(
                           ButtonUpdate(seguro: datos, id: seguro!.id)
-                        );
+                        );*/
                         /*SeguroRepository.shared.update(
                             tablaName: 'seguro',
                             data: datos,
                             whereClause: "id = ?",
                             whereArgs: ["${seguro?.id}"]);*/
-                        Navigator.pop(context);
+                        Navigator.pop(context, [datos, seguro!.id]);
                       } else {
                         var nuevosDatos = Seguro.fromService(datos);
-                        BlocProvider.of<CrudBloc>(context).add(
+                        /*BlocProvider.of<CrudBloc>(context).add(
                           ButtonAdd(seguro: nuevosDatos)
-                        );
+                        );*/
                         /*SeguroRepository.shared
                             .save(data: [nuevosDatos], tableName: 'seguro');*/
-                        Navigator.pop(context);
+                        Navigator.pop(context, nuevosDatos);
                       }
                     }
                   })

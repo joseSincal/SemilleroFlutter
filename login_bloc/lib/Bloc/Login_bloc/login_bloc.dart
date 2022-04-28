@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/utils/app_type.dart';
+import 'package:login_bloc/utils/ip_dab.dart';
 
 part 'login_state.dart';
 part 'login_event.dart';
@@ -18,11 +19,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       var body = {"email": event.email, "password": event.password};
 
       dynamic bodyRequest = await ApiManager.shared.request(
-          baseUrl: "192.168.1.4:9595",
+          baseUrl: ip + ":" + port,
           pathUrl: "/usuario/buscar/email",
           type: HttpType.POST,
           bodyParams: body);
-
 
       if (bodyRequest != null) {
         Usuario user = Usuario.fromService(bodyRequest);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
@@ -16,8 +17,15 @@ class SegurosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> segurosDb = List<dynamic>.empty(growable: true);
-    List<SeguroCard> seguros = List<SeguroCard>.empty(growable: true);
+    Future<List<SeguroCard>> _obtenerData(BuildContext context) async {
+      List<SeguroCard> seguros = List<SeguroCard>.empty(growable: true);
+      List<dynamic> listaSeguros = await SeguroProvider.shared.getAllDb();
+      for (var item in listaSeguros) {
+        seguros
+            .add(SeguroCard(seguro: Seguro.fromDb(item), contextList: context));
+      }
+      return seguros;
+    }
 
     return Scaffold(
       body: BlocProvider(
@@ -25,18 +33,6 @@ class SegurosList extends StatelessWidget {
         child: BlocListener<CrudBloc, CrudState>(
           listener: ((context, state) async {
             switch (state.runtimeType) {
-              case Searching:
-                segurosDb.clear();
-                segurosDb = await SeguroProvider.shared.getAllDb();
-                break;
-              case Found:
-                seguros.clear();
-                for (var item in segurosDb) {
-                  seguros.add(SeguroCard(
-                    seguro: Seguro.fromDb(item),
-                  ));
-                }
-                break;
               case SaveError:
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -59,49 +55,93 @@ class SegurosList extends StatelessWidget {
           }),
           child: BlocBuilder<CrudBloc, CrudState>(
             builder: ((context, state) {
-              return Scaffold(
-                body: Stack(
-                  children: [
-                    Background(height: null),
-                    const AppBarTitle(title: 'Seguro'),
-                    Container(
-                      margin: const EdgeInsets.only(top: 100),
-                      child: ListView(
-                        padding: const EdgeInsets.only(bottom: 25),
-                        children: seguros,
+              return FutureBuilder(
+                future: _obtenerData(context),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<SeguroCard> listaCardSeguros =
+                        snapshot.requireData as List<SeguroCard>;
+                    return Scaffold(
+                      body: Stack(
+                        children: [
+                          Background(height: null),
+                          const AppBarTitle(title: 'Seguro'),
+                          Container(
+                            margin: const EdgeInsets.only(top: 100),
+                            child: ListView(
+                              padding: const EdgeInsets.only(bottom: 25),
+                              children: listaCardSeguros,
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                floatingActionButton: SpeedDial(
-                  backgroundColor: Colors.white,
-                  foregroundColor: darkSienna,
-                  overlayColor: Colors.black,
-                  overlayOpacity: 0.1,
-                  spacing: 12.0,
-                  spaceBetweenChildren: 12.0,
-                  animatedIcon: AnimatedIcons.menu_close,
-                  children: [
-                    SpeedDialChild(
-                        child: const Icon(Icons.add_moderator_rounded),
-                        label: "Agregar seguro",
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (cxt) => FormularioSeguro()));
-                        }),
-                    SpeedDialChild(
-                        child: const Icon(Icons.add_card_rounded),
-                        label: "Agregar columna",
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (cxt) => NewColumnSeguro()));
-                        })
-                  ],
-                ),
+                      floatingActionButton: OfflineBuilder(
+                          connectivityBuilder: (
+                            BuildContext context,
+                            ConnectivityResult connectivity,
+                            Widget child,
+                          ) {
+                            final bool connected =
+                                connectivity != ConnectivityResult.none;
+                            return SpeedDial(
+                              backgroundColor: Colors.white,
+                              foregroundColor: darkSienna,
+                              overlayColor: Colors.black,
+                              overlayOpacity: 0.1,
+                              spacing: 12.0,
+                              spaceBetweenChildren: 12.0,
+                              animatedIcon: AnimatedIcons.menu_close,
+                              children: [
+                                SpeedDialChild(
+                                    child:
+                                        const Icon(Icons.add_moderator_rounded),
+                                    label: "Agregar seguro",
+                                    onTap: () {
+                                      if (connected) {
+                                        Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (cxt) =>
+                                                        FormularioSeguro()))
+                                            .then((value) => {
+                                                  if (value != null)
+                                                    {
+                                                      BlocProvider.of<CrudBloc>(
+                                                              context)
+                                                          .add(ButtonAdd(
+                                                              seguro: value))
+                                                    }
+                                                });
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'No puede realizar la operación sin internet')),
+                                        );
+                                      }
+                                    }),
+                                SpeedDialChild(
+                                    child: const Icon(Icons.add_card_rounded),
+                                    label: "Agregar columna",
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (cxt) =>
+                                                  NewColumnSeguro()));
+                                    })
+                              ],
+                            );
+                          },
+                          child: const Text("Hola")),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               );
             }),
           ),

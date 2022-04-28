@@ -1,5 +1,8 @@
 import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/Repository/seguro_repository.dart';
+import 'package:login_bloc/utils/app_type.dart';
+import 'package:login_bloc/utils/ip_dab.dart';
 
 class SeguroProvider {
   SeguroProvider._privateConstructor();
@@ -25,5 +28,20 @@ class SeguroProvider {
   Future<void> deleteSeguro(String condicion, List<String> args) async {
     await SeguroRepository.shared
         .delete(tablaName: "seguro", whereClause: condicion, whereArgs: args);
+  }
+
+  Future<void> cargarSeguros() async {
+    dynamic bodyRequest = await ApiManager.shared.request(
+        baseUrl: ip + ":" + port,
+        pathUrl: "/seguro/buscar",
+        type: HttpType.GET);
+    if (bodyRequest != null) {
+      List<Seguro> lista = List<Seguro>.empty(growable: true);
+      for (var item in bodyRequest as List<dynamic>) {
+        final Seguro seguro = Seguro.fromService(item);
+        lista.add(seguro);
+      }
+      SeguroRepository.shared.save(data: lista, tableName: 'seguro');
+    }
   }
 }
