@@ -96,8 +96,11 @@ class DetalleSiniestro extends StatelessWidget {
             final bool connected = connectivity != ConnectivityResult.none;
             return IconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
-                return DialogDelete.shared.show(contextList, "siniestro",
-                    "id = ?", [siniestro.id.toString()]);
+                return DialogDelete.shared.show(
+                    contextList, "siniestro", "id = ?", [
+                  siniestro.id.toString(),
+                  siniestro.idSiniestro.toString()
+                ]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

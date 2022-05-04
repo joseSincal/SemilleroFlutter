@@ -5,9 +5,18 @@ class Usuario {
   late String username;
 
   Usuario.fromService(Map<String, dynamic> data) {
-    this.idUser = data['idUser'];
-    this.email = data['email'];
-    this.password = data['password'];
-    this.username = data['username'];
+    idUser = data['idUser'] ?? data['id'];
+    email = data['email'];
+    password = data['password'];
+    username = data['username'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': idUser,
+      'email': email,
+      'password': password,
+      'username': username
+    };
   }
 }

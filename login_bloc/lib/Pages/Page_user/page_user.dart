@@ -1,21 +1,17 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:login_bloc/Models/theme_preferences.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/clientes_list.dart';
 import 'package:login_bloc/Pages/Page_seguros/seguros_list.dart';
 import 'package:login_bloc/Pages/Page_settings/page_settings.dart';
 import 'package:login_bloc/Pages/Page_siniestro/siniestros_list.dart';
 import 'package:login_bloc/Pages/Page_user/widgets/user_info.dart';
-import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Providers/api_manager.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
+import 'package:login_bloc/utils/app_type.dart';
 import 'package:login_bloc/utils/color.dart';
-import 'package:provider/provider.dart';
+import 'package:login_bloc/utils/variables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PageUser extends StatelessWidget {
   final Usuario usuario;
@@ -23,9 +19,6 @@ class PageUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseCrashlytics crashlytics = FirebaseCrashlytics.instance;
-    final currentTheme = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
       body: Stack(
         children: [
@@ -55,7 +48,9 @@ class PageUser extends StatelessWidget {
                             FloatingActionButton(
                                 backgroundColor: Colors.white54,
                                 mini: true,
-                                onPressed: () {
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences.getInstance();
+                                  await prefs.remove('userLogeadFlutter');
                                   Navigator.pop(context);
                                 },
                                 child: Icon(
@@ -119,6 +114,28 @@ class PageUser extends StatelessWidget {
                                 builder: (cxt) => const SiniestrosList()));
                       },
                     ),
+                    ButtonLarge(
+                      buttonText: "Ser Admin",
+                      onPressed: () {
+                        ApiManager.shared
+                            .request(
+                                baseUrl: ip + ":" + port,
+                                pathUrl: "/usuario/error",
+                                type: HttpType.GET)
+                            .then((value) => {
+                                  if (value.statusCode == 403)
+                                    {
+                                      Navigator.pop(context),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'No está autorizado para realizar esta operación')),
+                                      )
+                                    }
+                                });
+                      },
+                    )
                   ],
                 ),
               ),

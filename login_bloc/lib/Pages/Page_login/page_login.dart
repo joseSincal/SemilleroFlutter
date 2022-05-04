@@ -1,15 +1,19 @@
 import 'dart:developer';
 
+import 'package:encryptor/encryptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_bloc/Bloc/Login_bloc/login_bloc.dart';
+import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Pages/Page_user/page_user.dart';
 import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Providers/user_provider.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
+import 'package:login_bloc/utils/variables.dart' as variables;
 
 class PageLogin extends StatelessWidget {
   TextEditingController _controllerEmail = TextEditingController();
@@ -24,7 +28,8 @@ class PageLogin extends StatelessWidget {
     return Scaffold(
         body: BlocProvider(
       create: (BuildContext context) => LoginBloc(),
-      child: BlocListener<LoginBloc, LoginState>(listener: ((context, state) {
+      child: BlocListener<LoginBloc, LoginState>(
+          listener: ((context, state) async {
         switch (state.runtimeType) {
           case AppStarted:
             break;
@@ -72,23 +77,27 @@ class PageLogin extends StatelessWidget {
                     Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(right: 45.0, left: 45.0),
+                          padding:
+                              const EdgeInsets.only(right: 45.0, left: 45.0),
                           margin:
                               const EdgeInsets.only(top: 35.0, bottom: 20.0),
-                          child: TextInput(
-                            hintText: "Email",
-                            icon: Icons.email_outlined,
-                            inputType: null,
-                            controller: _controllerEmail,
-                          ),
+                          child:
+                              emailAutoComplete(), /*TextInput(
+                                hintText: "Email",
+                                icon: Icons.email_outlined,
+                                inputType: TextInputType.emailAddress,
+                                controller: _controllerEmail,
+                                inputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.email],
+                              ),*/
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 20.0),
                           child: TextInputPassword(
-                            hintText: "Password",
-                            inputType: TextInputType.visiblePassword,
-                            controller: _controllerPassword,
-                          ),
+                              hintText: "Password",
+                              inputType: TextInputType.visiblePassword,
+                              controller: _controllerPassword,
+                              autofillHints: const [AutofillHints.password]),
                         ),
                         ButtonLarge(
                           buttonText: "Ingresar",
@@ -117,117 +126,78 @@ class PageLogin extends StatelessWidget {
       )),
     ));
   }
-}
 
+  Widget emailAutoComplete() {
+    return Autocomplete<Usuario>(
+        displayStringForOption: (Usuario option) => option.email,
+        optionsBuilder: (TextEditingValue textEditingValue) async {
+          _controllerEmail.text = textEditingValue.text;
+          if (textEditingValue.text == '') {
+            return const Iterable<Usuario>.empty();
+          }
+          List<Usuario> _userOptions = await UserProvider.shared.getUserEmailsPrefs();
+          if(_userOptions.isEmpty) {
+            return const Iterable<Usuario>.empty();
+          }
+          return _userOptions.where((Usuario option) {
+            return option.email
+                .toLowerCase()
+                .startsWith(textEditingValue.text.toLowerCase());
+          });
+        },
+        fieldViewBuilder: (BuildContext context,
+            TextEditingController fieldTextEditingController,
+            FocusNode fieldFocusNode,
+            VoidCallback onFieldSubmitted) {
+          return TextInput(
+            hintText: "Email",
+            icon: Icons.email_outlined,
+            inputType: TextInputType.emailAddress,
+            controller: fieldTextEditingController,
+            focusNode: fieldFocusNode,
+          );
+        },
+        onSelected: (Usuario selection) async {
+          bool autorizado = await UserProvider.shared.autorizar();
 
-/**
- * Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Bienvenido',
-                        style: TextStyle(
-                            fontSize: 24.0,
-                            color: currentTheme.isDarkTheme()
-                                ? Colors.white
-                                : Colors.black),
+          if (autorizado) {
+            _controllerPassword.text =
+                Encryptor.decrypt(variables.key, selection.password);
+          } else {
+            log('No está autorizado');
+          }
+        },
+        optionsViewBuilder: (BuildContext context,
+            AutocompleteOnSelected<Usuario> onSelected,
+            Iterable<Usuario> options) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: 300,
+                height: 350,
+                margin: const EdgeInsets.only(left: 30.0),
+                color: xiketic,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(10.0),
+                  itemCount: options.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Usuario option = options.elementAt(index);
+                    return GestureDetector(
+                      onTap: () {
+                        onSelected(option);
+                      },
+                      child: ListTile(
+                        title: Text(option.email,
+                            style: const TextStyle(color: Colors.white)),
                       ),
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 50.0, right: 50.0, top: 15.0),
-                                child: TextFormField(
-                                  style: TextStyle(
-                                      color: currentTheme.isDarkTheme()
-                                          ? Colors.white70
-                                          : Colors.black87),
-                                  decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
-                                      labelStyle: TextStyle(
-                                          color: currentTheme.isDarkTheme()
-                                              ? Colors.white70
-                                              : Colors.black87),
-                                      labelText: 'Email',
-                                      hintStyle: TextStyle(
-                                          color: currentTheme.isDarkTheme()
-                                              ? Colors.white54
-                                              : Colors.black45),
-                                      hintText:
-                                          'Ingrese un correo válido (example@company.com)'),
-                                  validator: MultiValidator([
-                                    RequiredValidator(
-                                        errorText: "* Campo obligatorio"),
-                                    EmailValidator(
-                                        errorText: "Ingrese un correo válido"),
-                                  ]),
-                                  onChanged: (text) {
-                                    email = text;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 50.0, right: 50.0, top: 15.0),
-                                child: TextFormField(
-                                    keyboardType: TextInputType.text,
-                                    obscureText: _passwordVisible,
-                                    style: TextStyle(
-                                        color: currentTheme.isDarkTheme()
-                                            ? Colors.white70
-                                            : Colors.black87),
-                                    decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            _passwordVisible
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                          ),
-                                          onPressed: () {
-                                            _passwordVisible = !_passwordVisible;
-                                          },
-                                        ),
-                                        border: const OutlineInputBorder(),
-                                        labelStyle: TextStyle(
-                                            color: currentTheme.isDarkTheme()
-                                                ? Colors.white70
-                                                : Colors.black87),
-                                        labelText: 'Password',
-                                        hintStyle: TextStyle(
-                                            color: currentTheme.isDarkTheme()
-                                                ? Colors.white54
-                                                : Colors.black45),
-                                        hintText:
-                                            'Ingrese su contraseña de seguridad'),
-                                    validator: MultiValidator([
-                                      RequiredValidator(
-                                          errorText: "* Campo obligatorio"),
-                                    ]),
-                                    onChanged: (text) {
-                                      password = text;
-                                    }),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 50.0, right: 50.0, top: 15.0),
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        BlocProvider.of<LoginBloc>(context).add(
-                                            LoginButtonPressed(
-                                                email: email,
-                                                password: password));
-                                      }
-                                    },
-                                    child: const Text('Log In')),
-                              )
-                            ],
-                          )),
-                    ],
-                  ),
+                    );
+                  },
                 ),
- */
+              ),
+            ),
+          );
+        });
+  }
+}

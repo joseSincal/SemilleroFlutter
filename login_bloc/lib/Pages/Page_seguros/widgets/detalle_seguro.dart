@@ -86,8 +86,8 @@ class DetalleSeguro extends StatelessWidget {
             final bool connected = connectivity != ConnectivityResult.none;
             return IconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
-                return DialogDelete.shared.show(
-                    contextList, "seguro", "id = ?", [seguro.id.toString()]);
+                return DialogDelete.shared.show(contextList, "seguro", "id = ?",
+                    [seguro.id.toString(), seguro.numeroPoliza.toString()]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

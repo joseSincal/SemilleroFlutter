@@ -45,12 +45,23 @@ class ApiManager {
     }
 
     Position pos = await LocationProvider().determinePosition();
-    await AgregarPeticion.shared.AddPeticion(pos, response.statusCode, uri.toString(), type);
+    await AgregarPeticion.shared
+        .AddPeticion(pos, response.statusCode, uri.toString(), type);
 
     if (response.statusCode == 200) {
       if (response.body != "") {
         return jsonDecode(utf8.decode(response.bodyBytes));
       }
+    } else if (response.statusCode == 403) {
+      if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+        FirebaseCrashlytics.instance.recordError(
+            "Error en API usuario", StackTrace.empty,
+            reason:
+                "StatusCode: ${response.statusCode}. Usuario no autorizado: $uri");
+      } else {
+        log("No se pudo enviar el error");
+      }
+      return response;
     } else {
       if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
         FirebaseCrashlytics.instance.recordError(

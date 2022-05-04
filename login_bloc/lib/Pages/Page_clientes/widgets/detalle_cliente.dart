@@ -94,7 +94,10 @@ class DetalleCliente extends StatelessWidget {
             return IconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
                 return DialogDelete.shared.show(
-                    contextList, "cliente", "id = ?", [cliente.id.toString()]);
+                    contextList,
+                    "cliente",
+                    "id = ?",
+                    [cliente.id.toString(), cliente.dniCl.toString()]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

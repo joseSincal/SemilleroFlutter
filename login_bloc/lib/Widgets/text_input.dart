@@ -11,7 +11,11 @@ class TextInput extends StatelessWidget {
   final String hintText;
   final TextInputType? inputType;
   final TextEditingController controller;
+  TextInputAction? inputAction;
   IconData? icon;
+  List<String>? autofillHints;
+  FocusNode? focusNode;
+
   int? maxLines;
   bool readOnly;
 
@@ -21,6 +25,9 @@ class TextInput extends StatelessWidget {
       required this.inputType,
       required this.controller,
       this.icon,
+      this.autofillHints,
+      this.focusNode,
+      this.inputAction,
       this.maxLines = 1,
       this.readOnly = false})
       : super(key: key);
@@ -35,6 +42,9 @@ class TextInput extends StatelessWidget {
         keyboardType: inputType,
         maxLines: maxLines,
         readOnly: readOnly,
+        autofillHints: autofillHints,
+        textInputAction: inputAction,
+        focusNode: focusNode,
         style: TextStyle(
             fontSize: 15.0,
             color: currentTheme.isDarkTheme() ? Colors.white70 : Colors.black87,
@@ -71,12 +81,14 @@ class TextInputPassword extends StatefulWidget {
   final TextInputType? inputType;
   final TextEditingController controller;
   int maxLines;
+  final List<String>? autofillHints;
 
   TextInputPassword(
       {Key? key,
       required this.hintText,
       required this.inputType,
       required this.controller,
+      this.autofillHints,
       this.maxLines = 1})
       : super(key: key);
 
@@ -98,6 +110,7 @@ class _TextInputPasswordState extends State<TextInputPassword> {
           controller: widget.controller,
           keyboardType: widget.inputType,
           obscureText: _passwordVisible,
+          autofillHints: widget.autofillHints,
           style: TextStyle(
               fontSize: 15.0,
               color:
@@ -239,7 +252,7 @@ class _ChechBoxInputState extends State<ChechBoxInput> {
 }
 
 class DropDownSelect extends StatefulWidget {
-  const DropDownSelect({ Key? key }) : super(key: key);
+  const DropDownSelect({Key? key}) : super(key: key);
 
   @override
   State<DropDownSelect> createState() => _DropDownSelectState();
@@ -248,8 +261,6 @@ class DropDownSelect extends StatefulWidget {
 class _DropDownSelectState extends State<DropDownSelect> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return Container();
   }
 }
