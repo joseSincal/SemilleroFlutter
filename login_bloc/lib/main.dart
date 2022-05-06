@@ -9,11 +9,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:login_bloc/Pages/Page_init/page_init.dart';
 import 'package:login_bloc/Pages/Page_login/page_login.dart';
+import 'package:login_bloc/Pages/Page_settings/page_settings.dart';
 import 'package:login_bloc/Providers/cliente_provider.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/seguro_provider.dart';
 import 'package:login_bloc/Providers/siniestro_provider.dart';
-import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Providers/theme_provider.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,6 +40,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeProvider themeChangeProvider = ThemeProvider();
+  LanguajeProvider langProvider = LanguajeProvider();
   late Future<void> _firebase;
 
   Future<void> _initializeFB() async {
@@ -43,6 +49,7 @@ class _MyAppState extends State<MyApp> {
     await _initializeRC();
     await _initializeCM();
     getCurrentAppTheme();
+    await getCurrentLanguaje();
     await _deleteDb();
     await ClienteProvider.shared.cargarClientes();
     await SeguroProvider.shared.cargarSeguros();
@@ -99,6 +106,10 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> getCurrentLanguaje() async {
+    langProvider.setLanguaje = await langProvider.getDefaultLanguaje();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -111,16 +122,37 @@ class _MyAppState extends State<MyApp> {
         future: _firebase,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return ChangeNotifierProvider.value(
-                value: themeChangeProvider,
-                child: MaterialApp(
-                  title: 'Flutter Demo',
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(
+                  value: themeChangeProvider,
+                ),
+                ChangeNotifierProvider(create: (_) => LanguajeProvider())
+              ],
+              child: Consumer2(builder: (context, ThemeProvider themeProvider,
+                  LanguajeProvider languajeProvider, widget) {
+                return MaterialApp(
+                  locale: languajeProvider.getLang,
+                  localizationsDelegates: const [
+                    AppLocalizationsDelegate(),
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('es', ''),
+                    Locale('en', ''),
+                  ],
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
                     visualDensity: VisualDensity.adaptivePlatformDensity,
                   ),
-                  home: PageLogin(),
-                ));
+                  debugShowCheckedModeBanner: false,
+                  title: 'SemiFlutter',
+                  home: const PageSettings(),
+                );
+              }),
+            );
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -129,3 +161,39 @@ class _MyAppState extends State<MyApp> {
         });
   }
 }
+
+/*
+
+return FutureBuilder(
+        future: _firebase,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ChangeNotifierProvider.value(
+                value: themeChangeProvider,
+                child: MaterialApp(
+                  title: 'Flutter Demo',
+                  localizationsDelegates: const [
+                    AppLocalizationsDelegate(),
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', ''), // English, no country code
+                    Locale('es', ''), // Spanish, no country code
+                  ],
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                    visualDensity: VisualDensity.adaptivePlatformDensity,
+                  ),
+                  debugShowCheckedModeBanner: false,
+                  home: PageLogin(),
+                ));
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+
+ */

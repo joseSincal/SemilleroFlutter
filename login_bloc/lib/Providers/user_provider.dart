@@ -76,7 +76,8 @@ class UserProvider {
     try {
       isAuthorized = await _autenticacion.authenticate(
           localizedReason: 'Autentifíquese para autocompletar la contraseña',
-          options: const AuthenticationOptions(biometricOnly: true));
+          options: const AuthenticationOptions(
+              useErrorDialogs: false, biometricOnly: true));
     } on PlatformException catch (e) {
       log('$e');
     }

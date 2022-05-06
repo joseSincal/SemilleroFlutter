@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/widgets/detalle_cliente.dart';
-import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Providers/theme_provider.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 

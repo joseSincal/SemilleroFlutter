@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_bloc/Bloc/Login_bloc/login_bloc.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Pages/Page_user/page_user.dart';
-import 'package:login_bloc/Providers/theme.dart';
+import 'package:login_bloc/Providers/theme_provider.dart';
 import 'package:login_bloc/Providers/user_provider.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
