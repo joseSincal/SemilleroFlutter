@@ -114,7 +114,7 @@ class DetalleCliente extends StatelessWidget {
                     contextList,
                     "cliente",
                     "id = ?",
-                    [cliente.id.toString(), cliente.dniCl.toString()]);
+                    [cliente.id.toString(), cliente.dniCl.toString()], localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

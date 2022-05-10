@@ -5,8 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
+import 'package:login_bloc/localization/localization.dart';
 import 'package:login_bloc/utils/color.dart';
+import 'package:provider/provider.dart';
 
 class DetalleSiniestro extends StatelessWidget {
   final Siniestro siniestro;
@@ -17,6 +20,9 @@ class DetalleSiniestro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
     return AlertDialog(
       content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +106,7 @@ class DetalleSiniestro extends StatelessWidget {
                     contextList, "siniestro", "id = ?", [
                   siniestro.id.toString(),
                   siniestro.idSiniestro.toString()
-                ]);
+                ], localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

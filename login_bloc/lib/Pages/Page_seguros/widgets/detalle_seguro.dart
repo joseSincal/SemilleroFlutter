@@ -5,8 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:login_bloc/Bloc/Crud_bloc/crud_bloc.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
 import 'package:login_bloc/Pages/Page_seguros/formulario_seguro.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
+import 'package:login_bloc/localization/localization.dart';
 import 'package:login_bloc/utils/color.dart';
+import 'package:provider/provider.dart';
 
 class DetalleSeguro extends StatelessWidget {
   final Seguro seguro;
@@ -17,6 +20,9 @@ class DetalleSeguro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
     return AlertDialog(
       content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,7 +93,7 @@ class DetalleSeguro extends StatelessWidget {
             return IconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
                 return DialogDelete.shared.show(contextList, "seguro", "id = ?",
-                    [seguro.id.toString(), seguro.numeroPoliza.toString()]);
+                    [seguro.id.toString(), seguro.numeroPoliza.toString()], localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

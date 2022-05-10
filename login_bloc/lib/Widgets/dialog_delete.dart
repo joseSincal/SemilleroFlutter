@@ -23,9 +23,7 @@ class DialogDelete {
   static DialogDelete shared = DialogDelete._privateConstructor();
 
   void show(BuildContext context, String nameTable, String condicion,
-      List<String> args) {
-    final lang = Provider.of<LanguajeProvider>(context);
-    AppLocalizations localization = AppLocalizations(lang.getLang);
+      List<String> args, AppLocalizations localization) {
 
     Dialogs.bottomMaterialDialog(
         msg: localization.dictionary(Strings.deleteDialogMsg),
