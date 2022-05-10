@@ -6,11 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_bloc/Bloc/Login_bloc/login_bloc.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Pages/Page_user/page_user.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
 import 'package:login_bloc/Providers/user_provider.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 import 'package:login_bloc/utils/variables.dart' as variables;
@@ -24,6 +27,8 @@ class PageLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
 
     return Scaffold(
         body: BlocProvider(
@@ -35,12 +40,12 @@ class PageLogin extends StatelessWidget {
             break;
           case UserNotFound:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Este usuario no existe')),
+              SnackBar(content: Text(localization.dictionary(Strings.msgErrorUser))),
             );
             break;
           case PasswordFailure:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Contraseña incorrecta')),
+              SnackBar(content: Text(localization.dictionary(Strings.msgErrorPassword))),
             );
             break;
           case LoginSuccess:
@@ -82,7 +87,7 @@ class PageLogin extends StatelessWidget {
                           margin:
                               const EdgeInsets.only(top: 35.0, bottom: 20.0),
                           child:
-                              emailAutoComplete(), /*TextInput(
+                              emailAutoComplete(localization), /*TextInput(
                                 hintText: "Email",
                                 icon: Icons.email_outlined,
                                 inputType: TextInputType.emailAddress,
@@ -94,13 +99,13 @@ class PageLogin extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(bottom: 20.0),
                           child: TextInputPassword(
-                              hintText: "Password",
+                              hintText: localization.dictionary(Strings.passwordInputHint),
                               inputType: TextInputType.visiblePassword,
                               controller: _controllerPassword,
                               autofillHints: const [AutofillHints.password]),
                         ),
                         ButtonLarge(
-                          buttonText: "Ingresar",
+                          buttonText: localization.dictionary(Strings.buttonTextLogin),
                           onPressed: () {
                             if (_controllerEmail.text != '' &&
                                 _controllerPassword.text != '') {
@@ -110,9 +115,8 @@ class PageLogin extends StatelessWidget {
                                       password: _controllerPassword.text));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Por favor introduzca todos los datos')),
+                                SnackBar(
+                                    content: Text(localization.dictionary(Strings.msgErrorDataEmpty))),
                               );
                             }
                           },
@@ -127,7 +131,7 @@ class PageLogin extends StatelessWidget {
     ));
   }
 
-  Widget emailAutoComplete() {
+  Widget emailAutoComplete(AppLocalizations localization) {
     return Autocomplete<Usuario>(
         displayStringForOption: (Usuario option) => option.email,
         optionsBuilder: (TextEditingValue textEditingValue) async {
@@ -150,7 +154,7 @@ class PageLogin extends StatelessWidget {
             FocusNode fieldFocusNode,
             VoidCallback onFieldSubmitted) {
           return TextInput(
-            hintText: "Email",
+            hintText: localization.dictionary(Strings.emailInputHint),
             icon: Icons.email_outlined,
             inputType: TextInputType.emailAddress,
             controller: fieldTextEditingController,

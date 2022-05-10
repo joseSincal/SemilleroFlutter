@@ -4,8 +4,12 @@ import 'package:flutter_offline/flutter_offline.dart';
 import 'package:login_bloc/Bloc/Crud_cliente_bloc/crud_cliente_bloc.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/formulario_cliente.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
+import 'package:provider/provider.dart';
 
 class DetalleCliente extends StatelessWidget {
   final Cliente cliente;
@@ -16,6 +20,9 @@ class DetalleCliente extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
     return AlertDialog(
       content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,40 +45,50 @@ class DetalleCliente extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon(
-                        "Tel", cliente.telefono, Icons.phone_enabled_rounded)),
+                    child: detailIcon(
+                        localization.dictionary(Strings.textPhone),
+                        cliente.telefono,
+                        Icons.phone_enabled_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Ciudad", cliente.ciudad, Icons.location_city_rounded)),
+                    child: detailIcon(localization.dictionary(Strings.textCity),
+                        cliente.ciudad, Icons.location_city_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Cod.P", cliente.codPostal, Icons.location_pin))
+                    child: detailIcon(
+                        localization.dictionary(Strings.textPostalDetail),
+                        cliente.codPostal,
+                        Icons.location_pin))
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Detalle de Vía",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.textDetailViaTitle),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon(
-                        "Clase", cliente.claseVia, Icons.widgets_rounded)),
+                    child: detailIcon(
+                        localization.dictionary(Strings.textClass),
+                        cliente.claseVia,
+                        Icons.widgets_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Nombre", cliente.nombreVia, Icons.abc_rounded)),
+                    child: detailIcon(localization.dictionary(Strings.textName),
+                        cliente.nombreVia, Icons.abc_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Número", cliente.numeroVia, Icons.numbers_rounded))
+                    child: detailIcon(
+                        localization.dictionary(Strings.textNumber),
+                        cliente.numeroVia,
+                        Icons.numbers_rounded))
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Observación",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.textObservation),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Text(
@@ -91,7 +108,7 @@ class DetalleCliente extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.delete_forever_rounded, darkRed, () {
+            return iconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
                 return DialogDelete.shared.show(
                     contextList,
@@ -100,9 +117,9 @@ class DetalleCliente extends StatelessWidget {
                     [cliente.id.toString(), cliente.dniCl.toString()]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
@@ -116,7 +133,7 @@ class DetalleCliente extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.edit, Colors.blue[600], () {
+            return iconAction(Icons.edit, Colors.blue[600], () {
               if (connected) {
                 Navigator.pop(context);
                 Navigator.push(
@@ -131,16 +148,16 @@ class DetalleCliente extends StatelessWidget {
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
           },
           child: const Text("Hola"),
         ),
-        IconAction(Icons.check_rounded, Colors.blueGrey, () {
+        iconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),
       ],
@@ -149,7 +166,7 @@ class DetalleCliente extends StatelessWidget {
     );
   }
 
-  Widget DetailIcon(String title, dynamic value, IconData icon) {
+  Widget detailIcon(String title, dynamic value, IconData icon) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Icon(icon, size: 14, color: Colors.black54),
       const SizedBox(height: 6.0),
@@ -167,7 +184,7 @@ class DetalleCliente extends StatelessWidget {
     ]);
   }
 
-  Widget IconAction(IconData icon, Color? color, Function() func) {
+  Widget iconAction(IconData icon, Color? color, Function() func) {
     return FloatingActionButton(
         backgroundColor: Colors.white,
         elevation: 0,

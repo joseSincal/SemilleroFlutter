@@ -9,9 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:login_bloc/Pages/Page_init/page_init.dart';
 import 'package:login_bloc/Pages/Page_login/page_login.dart';
-import 'package:login_bloc/Pages/Page_settings/page_settings.dart';
 import 'package:login_bloc/Providers/cliente_provider.dart';
 import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/seguro_provider.dart';
@@ -149,7 +147,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   debugShowCheckedModeBanner: false,
                   title: 'SemiFlutter',
-                  home: const PageSettings(),
+                  home: PageLogin(),
                 );
               }),
             );

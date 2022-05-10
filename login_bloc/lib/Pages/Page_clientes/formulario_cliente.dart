@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
+import 'package:provider/provider.dart';
 
 class FormularioCliente extends StatelessWidget {
   Cliente? cliente;
@@ -39,11 +43,16 @@ class FormularioCliente extends StatelessWidget {
       _observacionesController.text = cliente?.observaciones as String;
     }
 
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
     return Scaffold(
       body: Stack(children: [
         Background(height: null),
         AppBarTitle(
-            title: cliente != null ? "Editar cliente" : "Nuevo cliente"),
+            title: cliente != null
+                ? localization.dictionary(Strings.titlePageClientFormEdit)
+                : localization.dictionary(Strings.titlePageClientFormAdd)),
         Container(
           margin: const EdgeInsets.only(top: 105),
           child: ListView(
@@ -60,7 +69,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Nombre *",
+                  hintText: "${localization.dictionary(Strings.textName)} *",
                   inputType: TextInputType.text,
                   controller: _nombreController,
                   icon: Icons.abc_rounded),
@@ -68,7 +77,8 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Primer apellido *",
+                  hintText:
+                      "${localization.dictionary(Strings.lastName1HintInput)} *",
                   inputType: TextInputType.text,
                   controller: _apellido1Controller,
                   icon: Icons.abc_rounded),
@@ -76,7 +86,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Segundo apellido",
+                  hintText: localization.dictionary(Strings.lastName2HintInput),
                   inputType: TextInputType.text,
                   controller: _apellido2Controller,
                   icon: Icons.abc_rounded),
@@ -84,7 +94,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Ciudad",
+                  hintText: localization.dictionary(Strings.textCity),
                   inputType: TextInputType.text,
                   controller: _ciudadController,
                   icon: Icons.location_city_rounded),
@@ -92,7 +102,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Cod. Postal",
+                  hintText: localization.dictionary(Strings.textPostalCard),
                   inputType: TextInputType.number,
                   controller: _postalController,
                   icon: Icons.location_on),
@@ -100,7 +110,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Teléfono *",
+                  hintText: "${localization.dictionary(Strings.textPhoneComplete)} *",
                   inputType: TextInputType.number,
                   controller: _telController,
                   icon: Icons.phone),
@@ -108,7 +118,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Clase vía",
+                  hintText: localization.dictionary(Strings.classViaHintInput),
                   inputType: TextInputType.text,
                   controller: _claseVController,
                   icon: Icons.widgets_rounded),
@@ -116,7 +126,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Nombre vía",
+                  hintText: localization.dictionary(Strings.nameViaHintInput),
                   inputType: TextInputType.text,
                   controller: _nombreVController,
                   icon: Icons.abc_rounded),
@@ -124,7 +134,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Número vía",
+                  hintText: localization.dictionary(Strings.numberViaHintInput),
                   inputType: TextInputType.number,
                   controller: _numVController,
                   icon: Icons.numbers),
@@ -132,7 +142,7 @@ class FormularioCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Observaciones",
+                  hintText: localization.dictionary(Strings.textObservation),
                   maxLines: 5,
                   inputType: TextInputType.text,
                   controller: _observacionesController),
@@ -140,13 +150,13 @@ class FormularioCliente extends StatelessWidget {
                 height: height + 5,
               ),
               ButtonLarge(
-                  buttonText: cliente != null ? "Actualizar" : "Registrar",
+                  buttonText: cliente != null ? localization.dictionary(Strings.buttonUpdate) : localization.dictionary(Strings.buttonRegister),
                   onPressed: () {
                     if (_dniController.text.isEmpty ||
                         _nombreController.text.isEmpty ||
                         _apellido1Controller.text.isEmpty ||
                         _telController.text.isEmpty) {
-                      showToast("Error, debe llenar los campos obligatorios");
+                      showToast(localization.dictionary(Strings.msgErrorFormValidation));
                     } else {
                       var datos = {
                         'dniCl': int.parse(_dniController.text),
@@ -167,21 +177,9 @@ class FormularioCliente extends StatelessWidget {
                       };
 
                       if (cliente != null) {
-                        /*ClienteRepository.shared.update(
-                            tablaName: 'cliente',
-                            data: datos,
-                            whereClause: "id = ?",
-                            whereArgs: ["${cliente?.id}"]);*/
-                        /*BlocProvider.of<CrudClienteBloc>(context)
-                            .add(ButtonUpdate(cliente: datos, id: cliente!.id));*/
                         Navigator.pop(context, [datos, cliente!.id]);
                       } else {
                         var nuevosDatos = Cliente.fromService(datos);
-                        /*ClienteRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'cliente');*/
-
-                        /*BlocProvider.of<CrudClienteBloc>(context)
-                            .add(ButtonAdd(cliente: nuevosDatos));*/
                         Navigator.pop(context, nuevosDatos);
                       }
                     }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Repository/cliente_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
+import 'package:provider/provider.dart';
 
 class NewColumnCliente extends StatelessWidget {
   double height = 20.0;
@@ -15,10 +19,13 @@ class NewColumnCliente extends StatelessWidget {
     TextEditingController _nameController = TextEditingController();
     TextEditingController _typeController = TextEditingController();
 
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
     return Scaffold(
       body: Stack(children: [
         Background(height: null),
-        const AppBarTitle(title: "Add campo cliente"),
+        AppBarTitle(title: localization.dictionary(Strings.titlePageAddField)),
         Container(
           margin: const EdgeInsets.only(top: 105),
           child: ListView(
@@ -26,7 +33,7 @@ class NewColumnCliente extends StatelessWidget {
                 top: 25, bottom: 25, right: 30.0, left: 30.0),
             children: [
               TextInput(
-                  hintText: "Nombre *",
+                  hintText: "${localization.dictionary(Strings.textName)} *",
                   inputType: TextInputType.text,
                   controller: _nameController,
                   icon: Icons.abc_rounded),
@@ -34,7 +41,7 @@ class NewColumnCliente extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Tipo de dato *",
+                  hintText: "${localization.dictionary(Strings.dataTypeHint)} *",
                   inputType: TextInputType.text,
                   controller: _typeController,
                   icon: Icons.abc_rounded),
@@ -42,11 +49,11 @@ class NewColumnCliente extends StatelessWidget {
                 height: height + 5,
               ),
               ButtonLarge(
-                  buttonText: "Agregar",
+                  buttonText: localization.dictionary(Strings.buttonAddField),
                   onPressed: () {
                     if (_nameController.text.isEmpty ||
                         _typeController.text.isEmpty) {
-                      showToast("Error, debe llenar los campos obligatorios");
+                      showToast(localization.dictionary(Strings.msgErrorFormValidation));
                     } else {
                       ClienteRepository.shared.addColumn(
                           tablaName: "cliente",

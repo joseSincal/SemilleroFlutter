@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/cliente_model.dart';
 import 'package:login_bloc/Pages/Page_clientes/widgets/detalle_cliente.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +18,8 @@ class ClienteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
 
     final infoCard = Container(
       height: 120.0,
@@ -44,7 +49,7 @@ class ClienteCard extends StatelessWidget {
           ),
           Container(height: 10.0),
           Text(
-            "Tel: ${cliente.telefono}",
+            "${localization.dictionary(Strings.textPhone)}: ${cliente.telefono}",
             style: TextStyle(
                 color: currentTheme.isDarkTheme()
                     ? const Color(0xffb6b2df)
@@ -68,7 +73,7 @@ class ClienteCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Ciudad: ${cliente.ciudad}",
+                "${localization.dictionary(Strings.textCity)}: ${cliente.ciudad}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)
@@ -84,7 +89,7 @@ class ClienteCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Cod. Postal: ${cliente.codPostal}",
+                "${localization.dictionary(Strings.textPostalCard)}: ${cliente.codPostal}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)

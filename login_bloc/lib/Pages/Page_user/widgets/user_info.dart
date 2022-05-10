@@ -1,5 +1,7 @@
+import 'package:encryptor/encryptor.dart';
 import 'package:flutter/material.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
+import 'package:login_bloc/utils/variables.dart' as variables;
 
 class UserInfo extends StatelessWidget {
   final Usuario usuario;
@@ -32,7 +34,7 @@ class UserInfo extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ))),
-        Text(usuario.email,
+        Text(Encryptor.decrypt(variables.key, usuario.email),
             style: const TextStyle(
                 fontSize: 15.0, color: Colors.white30, fontFamily: 'Lato')),
       ],
