@@ -85,5 +85,13 @@ enum Strings {
   textCausas,
   textIdSiniestro,
   //Biometric
-  msgBiometric
+  msgBiometric,
+  msgBiometricNotAvailable,
+  msgBiometricPasscodeNotSet,
+  msgBiometricNotEnrolled,
+  msgBiometricLockedOut,
+  msgBiometricOtherOperatingSystem,
+  msgBiometricPermanentlyLockedOut,
+  msgBiometricNoAutorized
+
 }

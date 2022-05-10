@@ -70,17 +70,4 @@ class UserProvider {
     return usuarios;
   }
 
-  Future<bool> autorizar(String msg) async {
-    final LocalAuthentication _autenticacion = LocalAuthentication();
-    bool isAuthorized = false;
-    try {
-      isAuthorized = await _autenticacion.authenticate(
-          localizedReason: msg,
-          options: const AuthenticationOptions(
-              useErrorDialogs: false, biometricOnly: true));
-    } on PlatformException catch (e) {
-      log('$e');
-    }
-    return isAuthorized;
-  }
 }

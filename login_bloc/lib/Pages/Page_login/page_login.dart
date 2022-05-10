@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_bloc/Bloc/Login_bloc/login_bloc.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/Pages/Page_user/page_user.dart';
+import 'package:login_bloc/Providers/auth_biometric.dart';
 import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
 import 'package:login_bloc/Providers/user_provider.dart';
@@ -14,6 +15,7 @@ import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
 import 'package:login_bloc/localization/localization.dart';
 import 'package:login_bloc/utils/app_string.dart';
+import 'package:login_bloc/utils/auth_codes.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 import 'package:login_bloc/utils/variables.dart' as variables;
@@ -89,8 +91,8 @@ class PageLogin extends StatelessWidget {
                               const EdgeInsets.only(right: 45.0, left: 45.0),
                           margin:
                               const EdgeInsets.only(top: 35.0, bottom: 20.0),
-                          child: emailAutoComplete(
-                              localization), /*TextInput(
+                          child: emailAutoComplete(localization,
+                              context), /*TextInput(
                                 hintText: "Email",
                                 icon: Icons.email_outlined,
                                 inputType: TextInputType.emailAddress,
@@ -137,7 +139,8 @@ class PageLogin extends StatelessWidget {
     ));
   }
 
-  Widget emailAutoComplete(AppLocalizations localization) {
+  Widget emailAutoComplete(
+      AppLocalizations localization, BuildContext contextLog) {
     return Autocomplete<Usuario>(
         displayStringForOption: (Usuario option) => option.email,
         optionsBuilder: (TextEditingValue textEditingValue) async {
@@ -169,14 +172,15 @@ class PageLogin extends StatelessWidget {
           );
         },
         onSelected: (Usuario selection) async {
-          bool autorizado = await UserProvider.shared
-              .autorizar(localization.dictionary(Strings.msgBiometric));
+          AuthCodes code = await AuthBiometric.shared
+              .authenticate(localization.dictionary(Strings.msgBiometric));
 
-          if (autorizado) {
+          if (code == AuthCodes.authSuccess) {
             _controllerPassword.text =
                 Encryptor.decrypt(variables.key, selection.password);
           } else {
             log('No está autorizado');
+            msgBiometric(code, contextLog, localization);
           }
         },
         optionsViewBuilder: (BuildContext context,
@@ -211,5 +215,39 @@ class PageLogin extends StatelessWidget {
             ),
           );
         });
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> msgBiometric(
+      AuthCodes code, BuildContext context, AppLocalizations localization) {
+    late String msg;
+
+    switch (code.name) {
+      case 'notAvailable':
+      case 'cantBiometric':
+        msg = localization.dictionary(Strings.msgBiometricNotAvailable);
+        break;
+      case 'passcodeNotSet':
+        msg = localization.dictionary(Strings.msgBiometricPasscodeNotSet);
+        break;
+      case 'notEnrolled':
+        msg = localization.dictionary(Strings.msgBiometricNotEnrolled);
+        break;
+      case 'lockedOut':
+        msg = localization.dictionary(Strings.msgBiometricLockedOut);
+        break;
+      case 'otherOperatingSystem':
+        msg = localization.dictionary(Strings.msgBiometricOtherOperatingSystem);
+        break;
+      case 'permanentlyLockedOut':
+        msg = localization.dictionary(Strings.msgBiometricPermanentlyLockedOut);
+        break;
+      case 'noAutorized':
+        msg = localization.dictionary(Strings.msgBiometricNoAutorized);
+        break;
+    }
+
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+    ));
   }
 }

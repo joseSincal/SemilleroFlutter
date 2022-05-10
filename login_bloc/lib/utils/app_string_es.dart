@@ -87,5 +87,12 @@ const Map<Strings, String> dictionary_es = {
   Strings.textCausas: "Causas",
   Strings.textIdSiniestro: "ID Siniestro",
   //Biometric
-  Strings.msgBiometric: "Autentifíquese para autocompletar la contraseña"
+  Strings.msgBiometric: "Autentifíquese para autocompletar la contraseña",
+  Strings.msgBiometricNotAvailable: "El dispositivo no tiene soporte de hardware para biometría",
+  Strings.msgBiometricPasscodeNotSet: "Aún no ha configurado un código de acceso o PIN/patrón/contraseña en el dispositivo",
+  Strings.msgBiometricNotEnrolled: "No ha inscrito ninguna biometría en el dispositivo",
+  Strings.msgBiometricLockedOut: "El lector está bloqueada temporalmente debido a demasiados intentos",
+  Strings.msgBiometricOtherOperatingSystem: "El sistema operativo del dispositivo no es compatible",
+  Strings.msgBiometricPermanentlyLockedOut: "Se requiere una autenticación fuerte como PIN/Patrón/Contraseña para desbloquear",
+  Strings.msgBiometricNoAutorized: "No tiene autorización de acceso"
 };

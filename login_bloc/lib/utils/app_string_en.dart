@@ -88,5 +88,12 @@ const Map<Strings, String> dictionary_en = {
   Strings.textCausas: "Causes",
   Strings.textIdSiniestro: "Sinister ID",
   //Biometric
-  Strings.msgBiometric: "Authenticate to autofill password"
+  Strings.msgBiometric: "Authenticate to autofill password",
+  Strings.msgBiometricNotAvailable: "The device does not have hardware support for biometrics",
+  Strings.msgBiometricPasscodeNotSet: "You have not yet set a passcode or PIN/pattern/password on the device",
+  Strings.msgBiometricNotEnrolled: "You have not enrolled any biometrics on the device",
+  Strings.msgBiometricLockedOut: "The reader is temporarily locked due to too many attempts",
+  Strings.msgBiometricOtherOperatingSystem: "The operating system of the device is not supported",
+  Strings.msgBiometricPermanentlyLockedOut: "Strong authentication like PIN/Pattern/Password is required to unlock",
+  Strings.msgBiometricNoAutorized: "You do not have access authorization"
 };
