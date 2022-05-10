@@ -56,5 +56,20 @@ enum Strings {
   deleteDialogTitle,
   deleteDialogCancel,
   deleteDialogDelete,
-  deleteDialogMsgDelete
+  deleteDialogMsgDelete,
+  //Page Sure
+  titlePageSure,
+  textAddSure,
+  titlePageSureFormAdd,
+  titlePageSureFormEdit,
+  textDniClient,
+  textPoliza,
+  textRamo,
+  textVigencia,
+  textInicio,
+  textFin,
+  textFechaInicio,
+  textFechaFin,
+  polizaHintText,
+  condiconesHintText,
 }

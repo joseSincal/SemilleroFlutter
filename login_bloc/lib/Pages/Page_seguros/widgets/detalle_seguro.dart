@@ -8,6 +8,7 @@ import 'package:login_bloc/Pages/Page_seguros/formulario_seguro.dart';
 import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
 import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class DetalleSeguro extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Poliza #-${seguro.numeroPoliza}",
+              "${localization.dictionary(Strings.textPoliza)} #-${seguro.numeroPoliza}",
               style:
                   const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
             ),
@@ -38,39 +39,39 @@ class DetalleSeguro extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon(
-                        "DNI Cliente", seguro.dniCl, Icons.person_rounded)),
+                    child: detailIcon(
+                        localization.dictionary(Strings.textDniClient), seguro.dniCl, Icons.person_rounded)),
                 Expanded(
                     child:
-                        DetailIcon("Ramo", seguro.ramo, Icons.widgets_rounded))
+                        detailIcon(localization.dictionary(Strings.textRamo), seguro.ramo, Icons.widgets_rounded))
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Vigencía",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.textVigencia),
+              style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon(
-                        "Inicio",
+                    child: detailIcon(
+                        localization.dictionary(Strings.textInicio),
                         DateFormat("dd-MM-yyyy").format(seguro.fechaInicio),
                         Icons.start_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Fin",
+                    child: detailIcon(
+                        localization.dictionary(Strings.textFin),
                         DateFormat("dd-MM-yyyy")
                             .format(seguro.fechaVencimiento),
                         Icons.assignment_late_outlined))
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Observación",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.textObservation),
+              style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Text(
@@ -90,15 +91,15 @@ class DetalleSeguro extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.delete_forever_rounded, darkRed, () {
+            return iconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
                 return DialogDelete.shared.show(contextList, "seguro", "id = ?",
                     [seguro.id.toString(), seguro.numeroPoliza.toString()], localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
@@ -112,7 +113,7 @@ class DetalleSeguro extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.edit, Colors.blue[600], () {
+            return iconAction(Icons.edit, Colors.blue[600], () {
               if (connected) {
                 Navigator.pop(context);
                 Navigator.push(
@@ -127,16 +128,16 @@ class DetalleSeguro extends StatelessWidget {
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
           },
           child: const Text("Hola"),
         ),
-        IconAction(Icons.check_rounded, Colors.blueGrey, () {
+        iconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),
       ],
@@ -145,7 +146,7 @@ class DetalleSeguro extends StatelessWidget {
     );
   }
 
-  Widget DetailIcon(String title, dynamic value, IconData icon) {
+  Widget detailIcon(String title, dynamic value, IconData icon) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Icon(icon, size: 14, color: Colors.black54),
       const SizedBox(height: 6.0),
@@ -163,7 +164,7 @@ class DetalleSeguro extends StatelessWidget {
     ]);
   }
 
-  Widget IconAction(IconData icon, Color? color, Function() func) {
+  Widget iconAction(IconData icon, Color? color, Function() func) {
     return FloatingActionButton(
         backgroundColor: Colors.white,
         elevation: 0,

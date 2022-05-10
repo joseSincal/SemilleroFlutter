@@ -58,5 +58,20 @@ const Map<Strings, String> dictionary_en = {
   Strings.deleteDialogTitle: "Delete",
   Strings.deleteDialogCancel: "Cancel",
   Strings.deleteDialogDelete: "Remove",
-  Strings.deleteDialogMsgDelete: "Deleted data"
+  Strings.deleteDialogMsgDelete: "Deleted data",
+  //Page Sure
+  Strings.titlePageSure: "Sure",
+  Strings.textAddSure: "Add sure",
+  Strings.titlePageSureFormAdd: "New sure",
+  Strings.titlePageSureFormEdit: "Edit sure",
+  Strings.textDniClient: "Client DNI",
+  Strings.textPoliza: "Policy",
+  Strings.textRamo: "Branch",
+  Strings.textVigencia: "life",
+  Strings.textInicio: "Start",
+  Strings.textFin: "End",
+  Strings.textFechaInicio: "Start Date",
+  Strings.textFechaFin: "End Date",
+  Strings.polizaHintText: "Policy Num.",
+  Strings.condiconesHintText: "Particular condition",
 };

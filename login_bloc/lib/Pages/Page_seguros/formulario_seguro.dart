@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
+import 'package:provider/provider.dart';
 
 class FormularioSeguro extends StatelessWidget {
   Seguro? seguro;
@@ -34,10 +38,13 @@ class FormularioSeguro extends StatelessWidget {
       _dniController.text = "${seguro?.dniCl}";
     }
 
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
     return Scaffold(
       body: Stack(children: [
         Background(height: null),
-        AppBarTitle(title: seguro != null ? "Editar seguro" : "Nuevo seguro"),
+        AppBarTitle(title: seguro != null ? localization.dictionary(Strings.titlePageSureFormEdit) : localization.dictionary(Strings.titlePageSureFormAdd)),
         Container(
           margin: const EdgeInsets.only(top: 105),
           child: ListView(
@@ -45,7 +52,7 @@ class FormularioSeguro extends StatelessWidget {
                 top: 25, bottom: 25, right: 30.0, left: 30.0),
             children: [
               TextInput(
-                  hintText: "Num. Poliza *",
+                  hintText: "${localization.dictionary(Strings.polizaHintText)} *",
                   inputType: TextInputType.number,
                   controller: _polizaController,
                   icon: Icons.numbers_rounded,
@@ -54,7 +61,7 @@ class FormularioSeguro extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Ramo *",
+                  hintText: "${localization.dictionary(Strings.textRamo)} *",
                   inputType: TextInputType.text,
                   controller: _ramoController,
                   icon: Icons.abc_rounded),
@@ -62,18 +69,18 @@ class FormularioSeguro extends StatelessWidget {
                 height: height,
               ),
               TextDateInput(
-                  hintText: "Fecha Inicio *", controller: _fechaIniController),
+                  hintText: "${localization.dictionary(Strings.textFechaInicio)} *", controller: _fechaIniController),
               SizedBox(
                 height: height,
               ),
               TextDateInput(
-                  hintText: "Fecha Vencimiento *",
+                  hintText: "${localization.dictionary(Strings.textFechaFin)} *",
                   controller: _fechaFinController),
               SizedBox(
                 height: height,
               ),
               TextInput(
-                  hintText: "DNI Cliente *",
+                  hintText: "${localization.dictionary(Strings.textDniClient)} *",
                   inputType: TextInputType.number,
                   controller: _dniController,
                   icon: Icons.numbers_rounded),
@@ -81,7 +88,7 @@ class FormularioSeguro extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                hintText: "Condición particular",
+                hintText: localization.dictionary(Strings.condiconesHintText),
                 inputType: TextInputType.text,
                 controller: _condicionController,
                 maxLines: 5,
@@ -90,7 +97,7 @@ class FormularioSeguro extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                hintText: "Observaciones",
+                hintText: localization.dictionary(Strings.textObservation),
                 inputType: TextInputType.text,
                 controller: _observacionController,
                 maxLines: 5,
@@ -102,14 +109,14 @@ class FormularioSeguro extends StatelessWidget {
                 height: height + 5,
               ),
               ButtonLarge(
-                  buttonText: seguro != null ? "Actualizar" : "Registrar",
+                  buttonText: seguro != null ? localization.dictionary(Strings.buttonUpdate) : localization.dictionary(Strings.buttonRegister),
                   onPressed: () {
                     if (_polizaController.text.isEmpty ||
                         _ramoController.text.isEmpty ||
                         _fechaIniController.text.isEmpty ||
                         _fechaIniController.text.isEmpty ||
                         _dniController.text.isEmpty) {
-                      showToast("Error, debe llenar los campos obligatorios");
+                      showToast(localization.dictionary(Strings.msgErrorFormValidation));
                     } else {
                       var datos = {
                         'numeroPoliza': int.parse(_polizaController.text),
@@ -122,22 +129,9 @@ class FormularioSeguro extends StatelessWidget {
                       };
 
                       if (seguro != null) {
-                        /*BlocProvider.of<CrudBloc>(context).add(
-                          ButtonUpdate(seguro: datos, id: seguro!.id)
-                        );*/
-                        /*SeguroRepository.shared.update(
-                            tablaName: 'seguro',
-                            data: datos,
-                            whereClause: "id = ?",
-                            whereArgs: ["${seguro?.id}"]);*/
                         Navigator.pop(context, [datos, seguro!.id]);
                       } else {
                         var nuevosDatos = Seguro.fromService(datos);
-                        /*BlocProvider.of<CrudBloc>(context).add(
-                          ButtonAdd(seguro: nuevosDatos)
-                        );*/
-                        /*SeguroRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'seguro');*/
                         Navigator.pop(context, nuevosDatos);
                       }
                     }

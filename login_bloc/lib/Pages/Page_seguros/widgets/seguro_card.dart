@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/seguro_model.dart';
 import 'package:login_bloc/Pages/Page_seguros/widgets/detalle_seguro.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +18,8 @@ class SeguroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
 
     final infoCard = Container(
       height: 120.0,
@@ -44,7 +49,7 @@ class SeguroCard extends StatelessWidget {
           ),
           Container(height: 10.0),
           Text(
-            "DNI Cliente: ${seguro.dniCl}",
+            "${localization.dictionary(Strings.textDniClient)}: ${seguro.dniCl}",
             style: TextStyle(
                 color: currentTheme.isDarkTheme()
                     ? const Color(0xffb6b2df)
@@ -68,7 +73,7 @@ class SeguroCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Fecha Inicio: ${DateFormat("dd-MM-yyyy").format(seguro.fechaInicio)}",
+                "${localization.dictionary(Strings.textFechaInicio)}: ${DateFormat("dd-MM-yyyy").format(seguro.fechaInicio)}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)
@@ -84,7 +89,7 @@ class SeguroCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Fecha Fin: ${DateFormat("dd-MM-yyyy").format(seguro.fechaVencimiento)}",
+                "${localization.dictionary(Strings.textFechaFin)}: ${DateFormat("dd-MM-yyyy").format(seguro.fechaVencimiento)}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)
