@@ -74,4 +74,18 @@ const Map<Strings, String> dictionary_es = {
   Strings.textFechaFin: "Fecha Fin",
   Strings.polizaHintText: "Num. Poliza",
   Strings.condiconesHintText: "Condición particular",
+  //Page Siniestro
+  Strings.titlePageClaim: "Siniestros",
+  Strings.textAddClaim: "Agregar siniestro",
+  Strings.titlePageClaimFormAdd: "Nuevo siniestro",
+  Strings.titlePageClaimFormEdit: "Editar siniestro",
+  Strings.textRechazado: "Rechazado",
+  Strings.textAceptado: "Aceptado",
+  Strings.textFecha: "Fecha",
+  Strings.textIndemnizacion: "Indemnización",
+  Strings.textEstado: "Estado",
+  Strings.textCausas: "Causas",
+  Strings.textIdSiniestro: "ID Siniestro",
+  //Biometric
+  Strings.msgBiometric: "Autentifíquese para autocompletar la contraseña"
 };

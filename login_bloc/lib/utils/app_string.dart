@@ -72,4 +72,18 @@ enum Strings {
   textFechaFin,
   polizaHintText,
   condiconesHintText,
+  //Page Siniestro
+  titlePageClaim,
+  textAddClaim,
+  titlePageClaimFormAdd,
+  titlePageClaimFormEdit,
+  textRechazado,
+  textAceptado,
+  textFecha,
+  textIndemnizacion,
+  textEstado,
+  textCausas,
+  textIdSiniestro,
+  //Biometric
+  msgBiometric
 }

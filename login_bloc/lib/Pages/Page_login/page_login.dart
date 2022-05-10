@@ -40,12 +40,15 @@ class PageLogin extends StatelessWidget {
             break;
           case UserNotFound:
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(localization.dictionary(Strings.msgErrorUser))),
+              SnackBar(
+                  content: Text(localization.dictionary(Strings.msgErrorUser))),
             );
             break;
           case PasswordFailure:
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(localization.dictionary(Strings.msgErrorPassword))),
+              SnackBar(
+                  content:
+                      Text(localization.dictionary(Strings.msgErrorPassword))),
             );
             break;
           case LoginSuccess:
@@ -86,8 +89,8 @@ class PageLogin extends StatelessWidget {
                               const EdgeInsets.only(right: 45.0, left: 45.0),
                           margin:
                               const EdgeInsets.only(top: 35.0, bottom: 20.0),
-                          child:
-                              emailAutoComplete(localization), /*TextInput(
+                          child: emailAutoComplete(
+                              localization), /*TextInput(
                                 hintText: "Email",
                                 icon: Icons.email_outlined,
                                 inputType: TextInputType.emailAddress,
@@ -99,13 +102,15 @@ class PageLogin extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(bottom: 20.0),
                           child: TextInputPassword(
-                              hintText: localization.dictionary(Strings.passwordInputHint),
+                              hintText: localization
+                                  .dictionary(Strings.passwordInputHint),
                               inputType: TextInputType.visiblePassword,
                               controller: _controllerPassword,
                               autofillHints: const [AutofillHints.password]),
                         ),
                         ButtonLarge(
-                          buttonText: localization.dictionary(Strings.buttonTextLogin),
+                          buttonText:
+                              localization.dictionary(Strings.buttonTextLogin),
                           onPressed: () {
                             if (_controllerEmail.text != '' &&
                                 _controllerPassword.text != '') {
@@ -116,7 +121,8 @@ class PageLogin extends StatelessWidget {
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content: Text(localization.dictionary(Strings.msgErrorDataEmpty))),
+                                    content: Text(localization.dictionary(
+                                        Strings.msgErrorDataEmpty))),
                               );
                             }
                           },
@@ -139,8 +145,9 @@ class PageLogin extends StatelessWidget {
           if (textEditingValue.text == '') {
             return const Iterable<Usuario>.empty();
           }
-          List<Usuario> _userOptions = await UserProvider.shared.getUserEmailsPrefs();
-          if(_userOptions.isEmpty) {
+          List<Usuario> _userOptions =
+              await UserProvider.shared.getUserEmailsPrefs();
+          if (_userOptions.isEmpty) {
             return const Iterable<Usuario>.empty();
           }
           return _userOptions.where((Usuario option) {
@@ -162,7 +169,8 @@ class PageLogin extends StatelessWidget {
           );
         },
         onSelected: (Usuario selection) async {
-          bool autorizado = await UserProvider.shared.autorizar();
+          bool autorizado = await UserProvider.shared
+              .autorizar(localization.dictionary(Strings.msgBiometric));
 
           if (autorizado) {
             _controllerPassword.text =

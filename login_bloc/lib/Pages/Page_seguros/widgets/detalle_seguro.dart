@@ -23,7 +23,7 @@ class DetalleSeguro extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguajeProvider>(context);
     AppLocalizations localization = AppLocalizations(lang.getLang);
-    
+
     return AlertDialog(
       content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,16 +40,19 @@ class DetalleSeguro extends StatelessWidget {
               children: [
                 Expanded(
                     child: detailIcon(
-                        localization.dictionary(Strings.textDniClient), seguro.dniCl, Icons.person_rounded)),
+                        localization.dictionary(Strings.textDniClient),
+                        seguro.dniCl,
+                        Icons.person_rounded)),
                 Expanded(
-                    child:
-                        detailIcon(localization.dictionary(Strings.textRamo), seguro.ramo, Icons.widgets_rounded))
+                    child: detailIcon(localization.dictionary(Strings.textRamo),
+                        seguro.ramo, Icons.widgets_rounded))
               ],
             ),
             const SizedBox(height: 40.0),
             Text(
               localization.dictionary(Strings.textVigencia),
-              style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Row(
@@ -71,7 +74,8 @@ class DetalleSeguro extends StatelessWidget {
             const SizedBox(height: 40.0),
             Text(
               localization.dictionary(Strings.textObservation),
-              style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Text(
@@ -93,8 +97,12 @@ class DetalleSeguro extends StatelessWidget {
             final bool connected = connectivity != ConnectivityResult.none;
             return iconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
-                return DialogDelete.shared.show(contextList, "seguro", "id = ?",
-                    [seguro.id.toString(), seguro.numeroPoliza.toString()], localization);
+                return DialogDelete.shared.show(
+                    contextList,
+                    "seguro",
+                    "id = ?",
+                    [seguro.id.toString(), seguro.numeroPoliza.toString()],
+                    localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -122,9 +130,11 @@ class DetalleSeguro extends StatelessWidget {
                         builder: (cxt) => FormularioSeguro(
                               seguro: seguro,
                             ))).then((value) => {
-                      //aqui se debe hacer el update
-                      BlocProvider.of<CrudBloc>(contextList)
-                          .add(ButtonUpdate(seguro: value[0], id: value[1]))
+                      if (value != null)
+                        {
+                          BlocProvider.of<CrudBloc>(contextList)
+                              .add(ButtonUpdate(seguro: value[0], id: value[1]))
+                        }
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

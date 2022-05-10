@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:login_bloc/Bloc/Crud_siniestro_bloc/crud_siniestro_bloc.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Repository/seguro_repository.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
 import 'package:login_bloc/Widgets/button_large.dart';
 import 'package:login_bloc/Widgets/text_input.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
+import 'package:provider/provider.dart';
 
 class FormularioSiniestro extends StatelessWidget {
   Siniestro? siniestro;
@@ -36,13 +38,20 @@ class FormularioSiniestro extends StatelessWidget {
       _polizaController.text = "${siniestro?.seguro.numeroPoliza}";
     }
 
-    final check = ChechBoxInput(title: "Aceptado", status: _aceptadoController);
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
+    final check = ChechBoxInput(
+        title: localization.dictionary(Strings.textAceptado),
+        status: _aceptadoController);
 
     return Scaffold(
       body: Stack(children: [
         Background(height: null),
         AppBarTitle(
-            title: siniestro != null ? "Editar siniestro" : "Nuevo siniestro"),
+            title: siniestro != null
+                ? localization.dictionary(Strings.titlePageClaimFormEdit)
+                : localization.dictionary(Strings.titlePageClaimFormAdd)),
         Container(
           margin: const EdgeInsets.only(top: 105),
           child: ListView(
@@ -50,7 +59,8 @@ class FormularioSiniestro extends StatelessWidget {
                 top: 25, bottom: 25, right: 30.0, left: 30.0),
             children: [
               TextInput(
-                  hintText: "ID Siniestro *",
+                  hintText:
+                      "${localization.dictionary(Strings.textIdSiniestro)} *",
                   inputType: TextInputType.number,
                   controller: _idSiniestroController,
                   icon: Icons.numbers_rounded,
@@ -58,12 +68,14 @@ class FormularioSiniestro extends StatelessWidget {
               SizedBox(
                 height: height,
               ),
-              TextDateInput(hintText: "Fecha *", controller: _fechaController),
+              TextDateInput(
+                  hintText: "${localization.dictionary(Strings.textFecha)} *",
+                  controller: _fechaController),
               SizedBox(
                 height: height,
               ),
               TextInput(
-                hintText: "Causas *",
+                hintText: "${localization.dictionary(Strings.textCausas)} *",
                 inputType: TextInputType.text,
                 controller: _causaController,
                 maxLines: 6,
@@ -72,7 +84,7 @@ class FormularioSiniestro extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "Indemnización",
+                  hintText: localization.dictionary(Strings.textIndemnizacion),
                   inputType: TextInputType.number,
                   controller: _indemnizacionController,
                   icon: Icons.attach_money),
@@ -80,7 +92,8 @@ class FormularioSiniestro extends StatelessWidget {
                 height: height,
               ),
               TextInput(
-                  hintText: "# Poliza *",
+                  hintText:
+                      "# ${localization.dictionary(Strings.textPoliza)} *",
                   inputType: TextInputType.number,
                   controller: _polizaController,
                   icon: Icons.numbers),
@@ -93,13 +106,16 @@ class FormularioSiniestro extends StatelessWidget {
                 height: height + 5,
               ),
               ButtonLarge(
-                  buttonText: siniestro != null ? "Actualizar" : "Registrar",
+                  buttonText: siniestro != null
+                      ? localization.dictionary(Strings.buttonUpdate)
+                      : localization.dictionary(Strings.buttonRegister),
                   onPressed: () async {
                     if (_idSiniestroController.text.isEmpty ||
                         _fechaController.text.isEmpty ||
                         _causaController.text.isEmpty ||
                         _polizaController.text.isEmpty) {
-                      showToast("Error, debe llenar los campos obligatorios");
+                      showToast(localization
+                          .dictionary(Strings.msgErrorFormValidation));
                     } else {
                       List<dynamic> seguro = await SeguroRepository.shared
                           .selectWhere(
@@ -118,20 +134,9 @@ class FormularioSiniestro extends StatelessWidget {
 
                       if (siniestro != null) {
                         datos['seguro'] = jsonEncode(seguro.first);
-                        /*SiniestroRepository.shared.update(
-                            tablaName: 'siniestro',
-                            data: datos,
-                            whereClause: "id = ?",
-                            whereArgs: ["${siniestro?.id}"]);*/
-                        /*BlocProvider.of<CrudSiniestroBloc>(context).add(
-                            ButtonUpdate(siniestro: datos, id: siniestro!.id));*/
                         Navigator.pop(context, [datos, siniestro!.id]);
                       } else {
                         var nuevosDatos = Siniestro.fromService(datos);
-                        /*SiniestroRepository.shared
-                            .save(data: [nuevosDatos], tableName: 'siniestro');*/
-                        /*BlocProvider.of<CrudSiniestroBloc>(context)
-                            .add(ButtonAdd(siniestro: nuevosDatos));*/
                         Navigator.pop(context, [nuevosDatos]);
                       }
                     }

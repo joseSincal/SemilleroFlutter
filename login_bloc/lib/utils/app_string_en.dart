@@ -30,7 +30,7 @@ const Map<Strings, String> dictionary_en = {
   Strings.languajeOptionEnglish: "English",
   //General
   Strings.textPhone: "Phone",
-  Strings.textPhoneComplete : "Phone",
+  Strings.textPhoneComplete: "Phone",
   Strings.textCity: "City",
   Strings.textPostalCard: "Postal C.",
   Strings.textPostalDetail: "P.C",
@@ -54,7 +54,8 @@ const Map<Strings, String> dictionary_en = {
   Strings.titlePageAddField: "Add field",
   Strings.buttonAddField: "Add",
   //Delete Dialog
-  Strings.deleteDialogMsg: "Are you sure? you will not be able to undo this action",
+  Strings.deleteDialogMsg:
+      "Are you sure? you will not be able to undo this action",
   Strings.deleteDialogTitle: "Delete",
   Strings.deleteDialogCancel: "Cancel",
   Strings.deleteDialogDelete: "Remove",
@@ -67,11 +68,25 @@ const Map<Strings, String> dictionary_en = {
   Strings.textDniClient: "Client DNI",
   Strings.textPoliza: "Policy",
   Strings.textRamo: "Branch",
-  Strings.textVigencia: "life",
+  Strings.textVigencia: "Life",
   Strings.textInicio: "Start",
   Strings.textFin: "End",
   Strings.textFechaInicio: "Start Date",
   Strings.textFechaFin: "End Date",
   Strings.polizaHintText: "Policy Num.",
   Strings.condiconesHintText: "Particular condition",
+  //Page Siniestro
+  Strings.titlePageClaim: "Claims",
+  Strings.textAddClaim: "Add sinister",
+  Strings.titlePageClaimFormAdd: "New sinister",
+  Strings.titlePageClaimFormEdit: "Edit sinister",
+  Strings.textRechazado: "Refused",
+  Strings.textAceptado: "Accepted",
+  Strings.textFecha: "Date",
+  Strings.textIndemnizacion: "Compensation",
+  Strings.textEstado: "Status",
+  Strings.textCausas: "Causes",
+  Strings.textIdSiniestro: "Sinister ID",
+  //Biometric
+  Strings.msgBiometric: "Authenticate to autofill password"
 };

@@ -114,7 +114,8 @@ class DetalleCliente extends StatelessWidget {
                     contextList,
                     "cliente",
                     "id = ?",
-                    [cliente.id.toString(), cliente.dniCl.toString()], localization);
+                    [cliente.id.toString(), cliente.dniCl.toString()],
+                    localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -142,9 +143,11 @@ class DetalleCliente extends StatelessWidget {
                         builder: (cxt) => FormularioCliente(
                               cliente: cliente,
                             ))).then((value) => {
-                      //aqui se debe hacer el update
-                      BlocProvider.of<CrudClienteBloc>(contextList)
-                          .add(ButtonUpdate(cliente: value[0], id: value[1]))
+                      if (value != null)
+                        {
+                          BlocProvider.of<CrudClienteBloc>(contextList).add(
+                              ButtonUpdate(cliente: value[0], id: value[1]))
+                        }
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

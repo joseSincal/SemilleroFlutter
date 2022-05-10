@@ -7,10 +7,14 @@ import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Pages/Page_siniestro/new_column_siniestro.dart';
 import 'package:login_bloc/Pages/Page_siniestro/widgets/siniestro_card.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/siniestro_provider.dart';
 import 'package:login_bloc/Widgets/app_bar_title.dart';
 import 'package:login_bloc/Widgets/background.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
+import 'package:provider/provider.dart';
 
 class SiniestrosList extends StatelessWidget {
   const SiniestrosList({Key? key}) : super(key: key);
@@ -30,6 +34,9 @@ class SiniestrosList extends StatelessWidget {
       return siniestros;
     }
 
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+
     return Scaffold(
       body: BlocProvider(
         create: (BuildContext context) => CrudSiniestroBloc(),
@@ -38,20 +45,23 @@ class SiniestrosList extends StatelessWidget {
           switch (state.runtimeType) {
             case SaveError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                     content:
-                        Text('No se guardó el siniestro, debido a un error')),
+                        Text(localization.dictionary(Strings.msgErrorSave))),
               );
               break;
             case UpdateError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Error, no se pudo actualizar el siniestro')),
+                SnackBar(
+                    content:
+                        Text(localization.dictionary(Strings.msgErrorupdate))),
               );
               break;
             case RemoveError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Error al intentar eliminar')),
+                SnackBar(
+                    content:
+                        Text(localization.dictionary(Strings.msgErrorDelete))),
               );
               break;
           }
@@ -67,7 +77,9 @@ class SiniestrosList extends StatelessWidget {
                     body: Stack(
                       children: [
                         Background(height: null),
-                        const AppBarTitle(title: 'Siniestros'),
+                        AppBarTitle(
+                            title: localization
+                                .dictionary(Strings.titlePageClaim)),
                         Container(
                           margin: const EdgeInsets.only(top: 100),
                           child: ListView(
@@ -96,7 +108,8 @@ class SiniestrosList extends StatelessWidget {
                             children: [
                               SpeedDialChild(
                                   child: const Icon(Icons.add_alert_rounded),
-                                  label: "Agregar siniestro",
+                                  label: localization
+                                      .dictionary(Strings.textAddClaim),
                                   onTap: () {
                                     if (connected) {
                                       Navigator.push(
@@ -117,15 +130,17 @@ class SiniestrosList extends StatelessWidget {
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
+                                        SnackBar(
                                             content: Text(
-                                                'No puede realizar la operación sin internet')),
+                                                localization.dictionary(
+                                                    Strings.msgNoInternet))),
                                       );
                                     }
                                   }),
                               SpeedDialChild(
                                   child: const Icon(Icons.add_card_rounded),
-                                  label: "Agregar columna",
+                                  label: localization
+                                      .dictionary(Strings.textAddColumn),
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -147,77 +162,5 @@ class SiniestrosList extends StatelessWidget {
         }))),
       ),
     );
-
-    /*Future<List<SiniestroCard>> _obtenerData() async {
-      List<SiniestroCard> siniestros =
-          List<SiniestroCard>.empty(growable: true);
-      List<dynamic> listaSiniestros =
-          await SiniestroRepository.shared.selectAll(tablaName: 'siniestro');
-      for (var item in listaSiniestros) {
-        siniestros.add(SiniestroCard(
-          siniestro: Siniestro.fromDb(item),
-        ));
-      }
-      return siniestros;
-    }
-
-    return Scaffold(
-        body: FutureBuilder(
-      future: _obtenerData(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData) {
-          List<SiniestroCard> listaCardSiniestros =
-              snapshot.requireData as List<SiniestroCard>;
-          return Scaffold(
-            body: Stack(
-              children: [
-                Background(height: null),
-                const AppBarTitle(title: 'Siniestros'),
-                Container(
-                  margin: const EdgeInsets.only(top: 100),
-                  child: ListView(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    children: listaCardSiniestros,
-                  ),
-                )
-              ],
-            ),
-            floatingActionButton: SpeedDial(
-              backgroundColor: Colors.white,
-              foregroundColor: darkSienna,
-              overlayColor: Colors.black,
-              overlayOpacity: 0.1,
-              spacing: 12.0,
-              spaceBetweenChildren: 12.0,
-              animatedIcon: AnimatedIcons.menu_close,
-              children: [
-                SpeedDialChild(
-                    child: const Icon(Icons.add_alert_rounded),
-                    label: "Agregar siniestro",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cxt) => FormularioSiniestro()));
-                    }),
-                SpeedDialChild(
-                    child: const Icon(Icons.add_card_rounded),
-                    label: "Agregar columna",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (cxt) => NewColumnSiniestro()));
-                    })
-              ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    ));*/
   }
 }

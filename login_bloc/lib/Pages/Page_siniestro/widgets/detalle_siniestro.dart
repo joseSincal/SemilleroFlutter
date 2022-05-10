@@ -8,6 +8,7 @@ import 'package:login_bloc/Pages/Page_siniestro/formulario_siniestro.dart';
 import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Widgets/dialog_delete.dart';
 import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class DetalleSiniestro extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguajeProvider>(context);
     AppLocalizations localization = AppLocalizations(lang.getLang);
-    
+
     return AlertDialog(
       content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,15 +39,17 @@ class DetalleSiniestro extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon(
-                        "Fecha",
+                    child: detailIcon(
+                        localization.dictionary(Strings.textFecha),
                         DateFormat("dd-MM-yyyy")
                             .format(siniestro.fechaSiniestro),
                         Icons.date_range_rounded)),
                 Expanded(
-                    child: DetailIcon(
-                        "Estado",
-                        siniestro.aceptado ? "Aceptado" : "Rechazado",
+                    child: detailIcon(
+                        localization.dictionary(Strings.textEstado),
+                        siniestro.aceptado
+                            ? localization.dictionary(Strings.textAceptado)
+                            : localization.dictionary(Strings.textRechazado),
                         siniestro.aceptado
                             ? Icons.shield
                             : Icons.remove_moderator)),
@@ -56,31 +59,37 @@ class DetalleSiniestro extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                    child: DetailIcon("Indemnización", siniestro.indenmizacion,
+                    child: detailIcon(
+                        localization.dictionary(Strings.textIndemnizacion),
+                        siniestro.indenmizacion,
                         Icons.attach_money)),
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Seguro",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.titlePageSure),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: DetailIcon("Poliza", siniestro.seguro.numeroPoliza,
+                    child: detailIcon(
+                        localization.dictionary(Strings.textPoliza),
+                        siniestro.seguro.numeroPoliza,
                         Icons.numbers)),
                 Expanded(
-                    child: DetailIcon(
-                        "Ramo", siniestro.seguro.ramo, Icons.interests))
+                    child: detailIcon(localization.dictionary(Strings.textRamo),
+                        siniestro.seguro.ramo, Icons.interests))
               ],
             ),
             const SizedBox(height: 40.0),
-            const Text(
-              "Causas",
-              style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
+            Text(
+              localization.dictionary(Strings.textCausas),
+              style:
+                  const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 15.0),
             Text(
@@ -100,18 +109,19 @@ class DetalleSiniestro extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.delete_forever_rounded, darkRed, () {
+            return iconAction(Icons.delete_forever_rounded, darkRed, () {
               if (connected) {
                 return DialogDelete.shared.show(
-                    contextList, "siniestro", "id = ?", [
-                  siniestro.id.toString(),
-                  siniestro.idSiniestro.toString()
-                ], localization);
+                    contextList,
+                    "siniestro",
+                    "id = ?",
+                    [siniestro.id.toString(), siniestro.idSiniestro.toString()],
+                    localization);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
@@ -125,7 +135,7 @@ class DetalleSiniestro extends StatelessWidget {
             Widget child,
           ) {
             final bool connected = connectivity != ConnectivityResult.none;
-            return IconAction(Icons.edit, Colors.blue[600], () {
+            return iconAction(Icons.edit, Colors.blue[600], () {
               if (connected) {
                 Navigator.pop(context);
                 Navigator.push(
@@ -134,22 +144,24 @@ class DetalleSiniestro extends StatelessWidget {
                         builder: (cxt) => FormularioSiniestro(
                               siniestro: siniestro,
                             ))).then((value) => {
-                      //aqui se debe hacer el update
-                      BlocProvider.of<CrudSiniestroBloc>(contextList)
-                          .add(ButtonUpdate(siniestro: value[0], id: value[1]))
+                      if (value != null)
+                        {
+                          BlocProvider.of<CrudSiniestroBloc>(contextList).add(
+                              ButtonUpdate(siniestro: value[0], id: value[1]))
+                        }
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                       content:
-                          Text('No puede realizar la operación sin internet')),
+                          Text(localization.dictionary(Strings.msgNoInternet))),
                 );
               }
             });
           },
           child: const Text("Hola"),
         ),
-        IconAction(Icons.check_rounded, Colors.blueGrey, () {
+        iconAction(Icons.check_rounded, Colors.blueGrey, () {
           Navigator.pop(context);
         }),
       ],
@@ -158,7 +170,7 @@ class DetalleSiniestro extends StatelessWidget {
     );
   }
 
-  Widget DetailIcon(String title, dynamic value, IconData icon) {
+  Widget detailIcon(String title, dynamic value, IconData icon) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Icon(icon, size: 14, color: Colors.black54),
       const SizedBox(height: 6.0),
@@ -176,7 +188,7 @@ class DetalleSiniestro extends StatelessWidget {
     ]);
   }
 
-  Widget IconAction(IconData icon, Color? color, Function() func) {
+  Widget iconAction(IconData icon, Color? color, Function() func) {
     return FloatingActionButton(
         backgroundColor: Colors.white,
         elevation: 0,

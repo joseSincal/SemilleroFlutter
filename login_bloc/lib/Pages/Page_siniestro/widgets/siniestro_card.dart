@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Pages/Page_siniestro/widgets/detalle_siniestro.dart';
+import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
+import 'package:login_bloc/localization/localization.dart';
+import 'package:login_bloc/utils/app_string.dart';
 import 'package:login_bloc/utils/color.dart';
 import 'package:provider/provider.dart';
 
 class SiniestroCard extends StatelessWidget {
   final Siniestro siniestro;
   final BuildContext contextList;
-  const SiniestroCard({Key? key, required this.siniestro, required this.contextList}) : super(key: key);
+  const SiniestroCard(
+      {Key? key, required this.siniestro, required this.contextList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeProvider>(context);
+    final lang = Provider.of<LanguajeProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
 
     final infoCard = Container(
       height: 120.0,
@@ -35,7 +42,7 @@ class SiniestroCard extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(height: 4.0),
           Text(
-            "ID: ${siniestro.idSiniestro} - Ramo: ${siniestro.seguro.ramo}",
+            "ID: ${siniestro.idSiniestro} - ${localization.dictionary(Strings.textRamo)}: ${siniestro.seguro.ramo}",
             style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -43,7 +50,9 @@ class SiniestroCard extends StatelessWidget {
           ),
           Container(height: 10.0),
           Text(
-            siniestro.aceptado ? "Aceptado" : "Rechazado",
+            siniestro.aceptado
+                ? localization.dictionary(Strings.textAceptado)
+                : localization.dictionary(Strings.textRechazado),
             style: TextStyle(
                 color: currentTheme.isDarkTheme()
                     ? const Color(0xffb6b2df)
@@ -67,7 +76,7 @@ class SiniestroCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Fecha: ${DateFormat("dd-MM-yyyy").format(siniestro.fechaSiniestro)}",
+                "${localization.dictionary(Strings.textFecha)} ${DateFormat("dd-MM-yyyy").format(siniestro.fechaSiniestro)}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)
@@ -83,7 +92,7 @@ class SiniestroCard extends StatelessWidget {
                       : Colors.white60),
               Container(width: 8.0),
               Text(
-                "Indemnización: ${siniestro.indenmizacion}",
+                "${localization.dictionary(Strings.textIndemnizacion)}: ${siniestro.indenmizacion}",
                 style: TextStyle(
                     color: currentTheme.isDarkTheme()
                         ? const Color(0xffb6b2df)
@@ -101,8 +110,10 @@ class SiniestroCard extends StatelessWidget {
       onTap: () {
         showDialog(
             context: context,
-            builder: (context) => DetalleSiniestro(siniestro: siniestro,
-                  contextList: contextList,));
+            builder: (context) => DetalleSiniestro(
+                  siniestro: siniestro,
+                  contextList: contextList,
+                ));
       },
       child: infoCard,
     );
