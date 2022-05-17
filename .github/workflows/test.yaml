@@ -8,7 +8,10 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-    - run: cd login_bloc 
-    - run: flutter pub get
-    - run: flutter test
+    - run: |
+          cd login_bloc 
+          flutter pub get
+    - run: |
+        cd login_bloc 
+        flutter test
 
