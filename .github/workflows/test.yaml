@@ -16,7 +16,7 @@ jobs:
         with:
           channel: 'stable'
       - run: |
-          cd tarea_8 
+          cd login_bloc 
           flutter pub get
           flutter test
 
