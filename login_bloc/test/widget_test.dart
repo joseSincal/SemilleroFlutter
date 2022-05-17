@@ -1,10 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:login_bloc/Models/cliente_model.dart';
+import 'package:login_bloc/Models/seguro_model.dart';
+import 'package:login_bloc/Models/siniestro_model.dart';
 import 'package:login_bloc/Models/theme_preferences.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
+import 'package:login_bloc/Pages/Page_clientes/widgets/cliente_card.dart';
 import 'package:login_bloc/Pages/Page_init/page_init.dart';
+import 'package:login_bloc/Pages/Page_seguros/widgets/seguro_card.dart';
+import 'package:login_bloc/Pages/Page_siniestro/widgets/siniestro_card.dart';
 import 'package:login_bloc/Pages/Page_user/widgets/user_info.dart';
 import 'package:login_bloc/Providers/languaje_provider.dart';
 import 'package:login_bloc/Providers/theme_provider.dart';
@@ -154,44 +158,6 @@ void main() {
     });
   });
 
-  /*group('Cards', () {
-    testWidgets('Cliente card', (WidgetTester tester) async {
-      var data = {
-        'dniCl': 0,
-        'nombreCl': 'test',
-        'apellido1': 'test',
-        'telefono': 11111111
-      };
-
-      Cliente cliente = Cliente.fromService(data);
-
-      await tester.pumpWidget(FutureBuilder(
-          future: getCurrentLanguaje(),
-          builder: (context, snapshot) {
-            return MultiProvider(
-                providers: [
-                  ChangeNotifierProvider.value(
-                    value: themeChangeProvider,
-                  ),
-                  ChangeNotifierProvider(create: (_) => LanguajeProvider())
-                ],
-                child: Consumer2(
-                  builder: (context, ThemeProvider themeProvider,
-                      LanguajeProvider languajeProvider, widget) {
-                    return MaterialApp(
-                      locale: languajeProvider.getLang,
-                      home: ClienteCard(cliente: cliente, contextList: context),
-                    );
-                  },
-                ));
-          }));
-      await tester.pump();
-      expect(find.byType(GestureDetector), findsOneWidget);
-      expect(find.byIcon(Icons.location_city_rounded), findsOneWidget);
-      expect(find.text('11111111'), findsOneWidget);
-    });
-  });*/
-
   group('User Info', () {
     testWidgets('User', (WidgetTester tester) async {
       var data = {
@@ -220,6 +186,137 @@ void main() {
       await tester.pump();
       expect(find.byType(Image), findsOneWidget);
       expect(find.byType(Stack), findsWidgets);
+    });
+  });
+
+  group('Cards', () {
+    testWidgets('Cliente card', (WidgetTester tester) async {
+      var data = {
+        'dniCl': 0,
+        'nombreCl': 'test',
+        'apellido1': 'test',
+        'telefono': 11111111
+      };
+
+      Cliente cliente = Cliente.fromService(data);
+
+      await tester.pumpWidget(FutureBuilder(
+          future: getCurrentLanguaje(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider.value(
+                      value: themeChangeProvider,
+                    ),
+                    ChangeNotifierProvider(create: (_) => LanguajeProvider())
+                  ],
+                  child: Consumer2(
+                    builder: (context, ThemeProvider themeProvider,
+                        LanguajeProvider languajeProvider, widget) {
+                      return MaterialApp(
+                        locale: languajeProvider.getLang,
+                        home:
+                            ClienteCard(cliente: cliente, contextList: context),
+                      );
+                    },
+                  ));
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }));
+      await tester.pump();
+      expect(find.byType(GestureDetector), findsOneWidget);
+    });
+
+    testWidgets('Seguro card', (WidgetTester tester) async {
+      var data = {
+        'numeroPoliza': 0,
+        'ramo': 'test',
+        'fechaInicio': '2022-05-17',
+        'fechaVencimiento': '2022-05-17',
+        'dniCl': 0
+      };
+
+      Seguro seguro = Seguro.fromService(data);
+
+      await tester.pumpWidget(FutureBuilder(
+          future: getCurrentLanguaje(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider.value(
+                      value: themeChangeProvider,
+                    ),
+                    ChangeNotifierProvider(create: (_) => LanguajeProvider())
+                  ],
+                  child: Consumer2(
+                    builder: (context, ThemeProvider themeProvider,
+                        LanguajeProvider languajeProvider, widget) {
+                      return MaterialApp(
+                        locale: languajeProvider.getLang,
+                        home: SeguroCard(seguro: seguro, contextList: context),
+                      );
+                    },
+                  ));
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }));
+      await tester.pump();
+      expect(find.byType(GestureDetector), findsOneWidget);
+    });
+
+    testWidgets('Siniestro card', (WidgetTester tester) async {
+      var data = {
+        'idSiniestro': 0,
+        'fechaSiniestro': '2022-05-17',
+        'aceptado': '1',
+        'fechaVencimiento': '2022-05-17',
+        'seguro': {
+          'numeroPoliza': 0,
+          'ramo': 'test',
+          'fechaInicio': '2022-05-17',
+          'fechaVencimiento': '2022-05-17',
+          'dniCl': 0
+        }
+      };
+
+      Siniestro siniestro = Siniestro.fromService(data);
+
+      await tester.pumpWidget(FutureBuilder(
+          future: getCurrentLanguaje(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider.value(
+                      value: themeChangeProvider,
+                    ),
+                    ChangeNotifierProvider(create: (_) => LanguajeProvider())
+                  ],
+                  child: Consumer2(
+                    builder: (context, ThemeProvider themeProvider,
+                        LanguajeProvider languajeProvider, widget) {
+                      return MaterialApp(
+                        locale: languajeProvider.getLang,
+                        home: SiniestroCard(siniestro: siniestro, contextList: context),
+                      );
+                    },
+                  ));
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }));
+      await tester.pump();
+      expect(find.byType(GestureDetector), findsOneWidget);
     });
   });
 }

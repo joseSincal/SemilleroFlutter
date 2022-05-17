@@ -17,7 +17,7 @@ class Siniestro {
     fechaSiniestro = DateFormat("dd-MM-yyyy").parse(data['fechaSiniestro']);
     causas = data['causas']??"";
     aceptado = data['aceptado'] == "1";
-    indenmizacion = data['indenmizacion']??0;
+    indenmizacion = data['indenmizacion']??'0';
     seguro = Seguro.fromService(data['seguro']);
   }
 
