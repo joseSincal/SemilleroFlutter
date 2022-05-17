@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:encryptor/encryptor.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:login_bloc/Models/usuario_model.dart';
 import 'package:login_bloc/utils/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';

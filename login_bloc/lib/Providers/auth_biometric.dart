@@ -11,7 +11,7 @@ class AuthBiometric {
 
   final LocalAuthentication _auth = LocalAuthentication();
 
-  Future<bool> _checkBiometrics() async {
+  Future<bool> checkBiometrics() async {
     late bool canCheckBiometrics;
     try {
       canCheckBiometrics = await _auth.canCheckBiometrics;
@@ -23,7 +23,7 @@ class AuthBiometric {
   }
 
   Future<AuthCodes> authenticate(String msg) async {
-    bool canCheckBiometrics = await _checkBiometrics();
+    bool canCheckBiometrics = await checkBiometrics();
     if (canCheckBiometrics) {
       bool isAuthorized = false;
       try {
