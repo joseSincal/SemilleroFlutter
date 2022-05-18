@@ -228,7 +228,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(ClienteCard, skipOffstage: false), findsOneWidget);
+      expect(find.byType(GestureDetector, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Seguro card', (WidgetTester tester) async {
@@ -269,7 +269,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(SeguroCard, skipOffstage: false), findsOneWidget);
+      expect(find.byType(GestureDetector, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Siniestro card', (WidgetTester tester) async {
