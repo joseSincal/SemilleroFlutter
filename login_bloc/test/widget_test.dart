@@ -228,9 +228,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      await tester.pumpAndSettle();
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(GestureDetector, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Seguro card', (WidgetTester tester) async {
@@ -271,9 +269,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      await tester.pumpAndSettle();
-      expect(find.byType(GestureDetector), findsOneWidget);
+      expect(find.byType(GestureDetector, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Siniestro card', (WidgetTester tester) async {
