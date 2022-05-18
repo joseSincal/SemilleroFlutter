@@ -228,7 +228,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(ClienteCard), findsOneWidget);
+      expect(find.byType(ClienteCard, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Seguro card', (WidgetTester tester) async {
@@ -269,7 +269,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(SeguroCard), findsOneWidget);
+      expect(find.byType(SeguroCard, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Siniestro card', (WidgetTester tester) async {
@@ -316,7 +316,7 @@ void main() {
             }
           }));
       await tester.pump();
-      expect(find.byType(SiniestroCard), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
   });
 }
